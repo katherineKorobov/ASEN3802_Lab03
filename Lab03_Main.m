@@ -17,8 +17,6 @@ c=1 % chord length (m)
 N=50 % number of panels
 n=1000 %number of x coordinates
 
-%% Task 1 
-
 N = 50;
 c = 1; 
 
