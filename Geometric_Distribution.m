@@ -1,5 +1,6 @@
 function x=Geometric_Distribution(c,n)
-%NewFunction Summary of this function goes here
+% Inputs: chord length and number of points (c,n)
+% Outputs: x (equiangularly distributed
 % Function takes the chord length (c) and the number of points needed (n)
 % and creates a x distribution using the equiangular rays method about the
 % center of the chord (c/2)
