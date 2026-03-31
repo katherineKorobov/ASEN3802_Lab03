@@ -31,13 +31,16 @@ alpha = 12; % degrees
 v_inf = 50;
 error = 100;
 c_l_actual = 1;
-N = 100;
+N = 1;
+[x_b,y_b] = NACA_airfoils(m,p,t,c,N);
+[CL(N),CP,CIRC,X,Y] = Vortex_Panel_2(x_b,y_b,v_inf,alpha,flag);
+error(N) = (CL(N) - c_l_actual)/c_l_actual;
 
-while error > 0.01
+while error(N) > 0.01
     N = N + 1;
     [x_b,y_b] = NACA_airfoils(m,p,t,c,N);
-    [CL,CP,CIRC,X,Y] = Vortex_Panel_2(x_b,y_b,v_inf,alpha,flag);
-    error = (CL - c_l_actual)/c_l_actual;
+    [CL(N),CP,CIRC,X,Y] = Vortex_Panel_2(x_b,y_b,v_inf,alpha,flag);
+    error(N) = (CL(N) - c_l_actual)/c_l_actual;
 end
 
 
