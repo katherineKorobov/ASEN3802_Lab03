@@ -49,7 +49,7 @@ for i = 1 : N %adjust how x is obtained based on method used
 end 
 
 x_b = [x_u; x_l]; 
-y_b = [y_u, y_l]; 
+y_b = [y_u; y_l]; 
     
 end
 
