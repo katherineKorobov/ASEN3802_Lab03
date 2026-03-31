@@ -12,16 +12,44 @@ close all
 
 %% Part 1
 
-%Task 1
-% 
-% m= % maximum chamber (percent of chord)
-% p= % x location of maximum chamber (in thenths of chord)
-% t= % maximum thickness (percent of chord)
-
-
+%%Task 1
 c=1 % chord length (m)
 N=50 % number of panels
 n=1000 %number of x coordinates
+
+N = 50;
+c = 1; 
+
+%NACA 0021 ----------------
+m = 0;
+p = 0;
+t = 0.21 * c; 
+
+[x_b, y_b] = NACA_airfoils(m, p, t, c, N); 
+
+plot(x_b(1), y_b(1)) % upper surface
+hold on; 
+plot(x_b(2), y_b(2)) % lower surface
+xlabel("x")
+ylabel("y")
+title("NACA 0021")
+hold off;
+
+%NACA 2421 ----------------
+m_2 = 0.02 * c;
+p_2 = 0.40 * c; 
+t_2 = 0.21 * c; 
+
+[x_b2, y_b2] = NACA_airfoils(m_2, p_2, t_2, c, N); 
+
+plot(x_b2(1), y_b2(1)) % upper surface
+hold on; 
+plot(x_b2(2), y_b2(2)) % lower surface
+xlabel("x")
+ylabel("y")
+title("NACA 2421")
+hold off; 
+
 
 %% task 2
 m = 0; 
