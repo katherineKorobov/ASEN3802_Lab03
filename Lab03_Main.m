@@ -12,6 +12,7 @@ close all
 
 %% Part 1
 
+%<<<<<<< HEAD
 %Task 1
 
 m=[0;2]./100; % maximum chamber (percent of chord)
@@ -34,9 +35,64 @@ x_geo=Geometric_Distribution(c,N);
 [x_b_2421, y_b_2421] = NACA_airfoils(m(2),p(2),t(2),c,N);
 
 
-%Checking
-figure
-hold on
-plot(x_b_0021,y_b_0021)
-plot(x_b_2421,y_b_2421)
-hold off
+
+%%Task 1
+c=1 % chord length (m)
+N=50 % number of panels
+n=1000 %number of x coordinates
+
+N = 50;
+c = 1; 
+
+%NACA 0021 ----------------
+m = 0;
+p = 0;
+t = 0.21 * c; 
+
+[x_b, y_b] = NACA_airfoils(m, p, t, c, N); 
+
+plot(x_b(1), y_b(1)) % upper surface
+hold on; 
+plot(x_b(2), y_b(2)) % lower surface
+xlabel("x")
+ylabel("y")
+title("NACA 0021")
+hold off;
+
+%NACA 2421 ----------------
+m_2 = 0.02 * c;
+p_2 = 0.40 * c; 
+t_2 = 0.21 * c; 
+
+[x_b2, y_b2] = NACA_airfoils(m_2, p_2, t_2, c, N); 
+
+plot(x_b2(1), y_b2(1)) % upper surface
+hold on; 
+plot(x_b2(2), y_b2(2)) % lower surface
+xlabel("x")
+ylabel("y")
+title("NACA 2421")
+hold off; 
+
+
+%% task 2
+m = 0; 
+p = 0;
+t = 12/100;
+alpha = 12; % degrees
+v_inf = 50;
+error = 100;
+c_l_actual = 1;
+N = 1;
+[x_b,y_b] = NACA_airfoils(m,p,t,c,N);
+[CL(N),CP,CIRC,X,Y] = Vortex_Panel_2(x_b,y_b,v_inf,alpha,flag);
+error(N) = (CL(N) - c_l_actual)/c_l_actual;
+
+while error(N) > 0.01
+    N = N + 1;
+    [x_b,y_b] = NACA_airfoils(m,p,t,c,N);
+    [CL(N),CP,CIRC,X,Y] = Vortex_Panel_2(x_b,y_b,v_inf,alpha,flag);
+    error(N) = (CL(N) - c_l_actual)/c_l_actual;
+end
+
+
