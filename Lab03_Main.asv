@@ -8,3 +8,14 @@ close all
 %
 % Authors: {Corey Hannum, John Heflin, Katherine Korobov, and Kiana Watson}
 % Date: {03/31/2026}
+
+
+%% Part 1
+
+%Task 1
+
+m= %
+p= %
+t= %maximum 
+c=1 %chord length (m)
+N=50 %number of panels
