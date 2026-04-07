@@ -63,22 +63,37 @@ p = 0;
 t = 12/100;
 alpha = 12; % degrees
 v_inf = 50;
-error = 100;
-c_l_actual = 1;
-N = 1;
+c_l_actual = 1.25;
+N = 2;
 [x_b,y_b] = NACA_airfoils(m,p,t,c,N);
-CL(N) = Vortex_Panel(x_b,y_b,v_inf,alpha);
+
+if mod(N,2)==0
+    xb = [flip(x_b(N+1:2*N)); x_b(2:N-1,1)];
+    yb = [flip(y_b(N+1:2*N)); y_b(2:N-1,1)];
+else
+    xb = [flip(x_b(N+2:2*N)); x_b(1:N-1,1)];
+    yb = [flip(y_b(N+2:2*N)); y_b(1:N-1,1)];
+end
+
+CL(N) = Vortex_Panel(xb,yb,v_inf,alpha);
 error(N) = (CL(N) - c_l_actual)/c_l_actual;
 
-while error(N) > 0.01
+while abs(error(N)) > 0.01
     N = N + 1;
     [x_b,y_b] = NACA_airfoils(m,p,t,c,N);
-    CL(N) = Vortex_Panel(x_b,y_b,v_inf,alpha);
+    if mod(N,2)==0
+        xb = [flip(x_b(N+1:2*N)); x_b(2:N-1,1)];
+        yb = [flip(y_b(N+1:2*N)); y_b(2:N-1,1)];
+    else
+        xb = [flip(x_b(N+2:2*N)); x_b(1:N-1,1)];
+        yb = [flip(y_b(N+2:2*N)); y_b(1:N-1,1)];
+    end
+    CL(N) = Vortex_Panel(xb,yb,v_inf,alpha);
     error(N) = (CL(N) - c_l_actual)/c_l_actual;
 end
 
 figure()
-plot(1:N,error)
+plot(2:N,error(2:N))
 hold on
 yline(0.01)
 xlabel('Number of Panels')
