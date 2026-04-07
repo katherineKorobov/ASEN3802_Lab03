@@ -37,6 +37,8 @@ plot(x_b, y_b) % upper surface
 plot(x_b, y_b) % lower surface
 xlabel("x")
 ylabel("y")
+xlim([0,c]);
+ylim([-c./2,c./2]);
 title("NACA 0021")
 hold off;
 
@@ -52,6 +54,8 @@ plot(x_b2, y_b2) % upper surface
 plot(x_b2, y_b2) % lower surface
 xlabel("x")
 ylabel("y")
+xlim([0,c]);
+ylim([-c./2,c./2]);
 title("NACA 2421")
 hold off; 
 
