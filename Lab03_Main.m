@@ -100,3 +100,49 @@ ylabel('Percent Error')
 title('Convergence of the predicted sectional coefficient of lift (c_l) with respect to number of panels (N)')
 
 
+%% Task 3
+
+param_0012 = struct("m", 0, "p", 0, "t", 12/100);
+param_0006 = struct("m", 0, "p", 0, "t", 6/100);
+param_0018 = struct("m", 0, "p", 0, "t", 18/100);
+
+num_panels = 50; % will change after task 2 finished
+
+% build airfoils
+[x_0006,y_0006] = NACA_airfoils(param_0006.m, param_0006.p, param_0006.t, c, num_panels);
+[x_0012,y_0012] = NACA_airfoils(param_0012.m, param_0012.p, param_0012.t, c, num_panels);
+[x_0018,y_0018] = NACA_airfoils(param_0018.m, param_0018.p, param_0018.t, c, num_panels);
+
+% we need to flip the x and y to go from trailing edge to leading edge
+% clockwise
+[flipped_x_0006, fipped_y_0006] = flipPositions(x_0006, y_0006);
+[flipped_x_0012, fipped_y_0012] = flipPositions(x_0012, y_0012);
+[flipped_x_0018, fipped_y_0018] = flipPositions(x_0018, y_0018);
+
+% collect experimental data
+data_0006 = load("NACA_0006_data.mat");
+data_0012 = load("NACA_0012_data.mat");
+
+experimental_0006 = data_0006.data;
+experimental_0012 = data_0012.data;
+
+% create range for alpha
+alpha = linspace(-10, 10, 20); % AoA from 0 deg to 45 deg
+
+for i = 1:length(alpha)
+      
+    cl_0006(i) = Vortex_Panel(x_0006, y_0006, 1, alpha(i));
+    cl_0012(i) = Vortex_Panel(x_0012, y_0012, 1, alpha(i));
+    cl_0018(i) = Vortex_Panel(x_0018, y_0018, 1, alpha(i));
+
+end
+
+figure();
+hold on;
+plot(alpha, cl_0006);
+plot(alpha, cl_0012);
+plot(alpha, cl_0018);
+plot(experimental_0006(:, 1), experimental_0006(:, 2));
+plot(experimental_0012(:, 1), experimental_0012(:, 2));
+hold off;
+legend("Predicted NACA 0006", "Predicted NACA 0012", "Predicted NACA");
