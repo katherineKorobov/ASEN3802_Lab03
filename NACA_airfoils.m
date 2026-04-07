@@ -1,5 +1,3 @@
-
-
 function [x_b, y_b] = NACA_airfoils(m,p,t,c,N)
     
 %NACA_airfoils outputs the coordinates of boundary points for a NACA airfoil.  
@@ -21,7 +19,7 @@ y_l = zeros(N, 1);
 
 for i = 1 : N %adjust how x is obtained based on method used 
     
-    % x = ___ 
+    x=Geometric_Distribution(c,N);
     
     y_t = (t/0.2)*c * ((0.2969*sqrt(x/c)) - (0.1260*(x/c)) - (0.3516*(x/c)^2) + (0.2843*(x/c)^3) - (0.1036*(x/c)^4));
 
