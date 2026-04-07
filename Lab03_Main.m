@@ -12,7 +12,7 @@ close all
 
 %% Part 1
 
-%<<<<<<< HEAD
+
 
 
 %%Task 1
@@ -20,6 +20,10 @@ close all
 c=1; % chord length (m)
 N=50; % number of panels
 
+%% Task 1
+c=1; % chord length (m)
+N=50; % number of panels
+n=1000; %number of x coordinates
 
 %NACA 0021 ----------------
 m = 0;
@@ -53,6 +57,7 @@ hold off;
 
 
 %% task 2
+% NACA 0012
 m = 0; 
 p = 0;
 t = 12/100;
@@ -62,14 +67,22 @@ error = 100;
 c_l_actual = 1;
 N = 1;
 [x_b,y_b] = NACA_airfoils(m,p,t,c,N);
-[CL(N),CP,CIRC,X,Y] = Vortex_Panel_2(x_b,y_b,v_inf,alpha,flag);
+CL(N) = Vortex_Panel(x_b,y_b,v_inf,alpha);
 error(N) = (CL(N) - c_l_actual)/c_l_actual;
 
 while error(N) > 0.01
     N = N + 1;
     [x_b,y_b] = NACA_airfoils(m,p,t,c,N);
-    [CL(N),CP,CIRC,X,Y] = Vortex_Panel_2(x_b,y_b,v_inf,alpha,flag);
+    CL(N) = Vortex_Panel(x_b,y_b,v_inf,alpha);
     error(N) = (CL(N) - c_l_actual)/c_l_actual;
 end
+
+figure()
+plot(1:N,error)
+hold on
+yline(0.01)
+xlabel('Number of Panels')
+ylabel('Percent Error')
+title('Convergence of the predicted sectional coefficient of lift (c_l) with respect to number of panels (N)')
 
 
