@@ -28,12 +28,12 @@ for i = 1 : N %adjust how x is obtained based on method used
 
     if (0 <= x(i)) && (x(i) < (p.*c))
 
-        y_c = m.*(x(i)/(p^2)) .* (2.*p - (x(i)./c)); 
-        dy_c = (m.*(2.*p - x(i)./c))/p.^2 - (m.*x(i))./(c.*p^2); %derivative with respect to x 
+        y_c = m.*(x(i)/(p.^2)) .* (2.*p - (x(i)./c)); 
+        dy_c = (m.*(2.*p - x(i)./c))/p.^2 - (m.*x(i))./(c.*p.^2); %derivative with respect to x 
+        
+    elseif ((p.*c)<= x(i)) && (x(i) <= c)
 
-    elseif ((p.*c)<= x(i)) && (x(i) < c)
-
-        y_c = m.*((c-x(i))./(1-p)^2) .* (1 + (x(i)./c) - (2.*p)); 
+        y_c = m.*((c-x(i))./(1-p).^2) .* (1 + (x(i)./c) - (2.*p)); 
         dy_c = (m.*(c - x(i)))./(c.*(p - 1).^2) - (m.*(x(i)./c - 2.*p + 1))/(p - 1).^2; 
 
     else

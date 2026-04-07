@@ -13,47 +13,24 @@ close all
 %% Part 1
 
 %<<<<<<< HEAD
-%Task 1
 
-m=[0;2]./100; % maximum chamber (percent of chord)
-p=[0;4]./10; % x location of maximum chamber (in thenths of chord)
-t=[21;21]./100; % maximum thickness (percent of chord)
 
+%%Task 1
 
 c=1; % chord length (m)
 N=50; % number of panels
 
-x_geo=Geometric_Distribution(c,N);
-
-%NACA 0021
-
-[x_b_0021, y_b_0021] = NACA_airfoils(m(1),p(1),t(1),c,N);
-
-
-
-%NACA 2421
-[x_b_2421, y_b_2421] = NACA_airfoils(m(2),p(2),t(2),c,N);
-
-
-
-%%Task 1
-c=1 % chord length (m)
-N=50 % number of panels
-n=1000 %number of x coordinates
-
-N = 50;
-c = 1; 
 
 %NACA 0021 ----------------
 m = 0;
 p = 0;
-t = 0.21 * c; 
+t = 0.21 .* c; 
 
 [x_b, y_b] = NACA_airfoils(m, p, t, c, N); 
-
-plot(x_b(1), y_b(1)) % upper surface
+figure
 hold on; 
-plot(x_b(2), y_b(2)) % lower surface
+plot(x_b, y_b) % upper surface
+plot(x_b, y_b) % lower surface
 xlabel("x")
 ylabel("y")
 title("NACA 0021")
@@ -65,10 +42,10 @@ p_2 = 0.40 * c;
 t_2 = 0.21 * c; 
 
 [x_b2, y_b2] = NACA_airfoils(m_2, p_2, t_2, c, N); 
-
-plot(x_b2(1), y_b2(1)) % upper surface
+figure
 hold on; 
-plot(x_b2(2), y_b2(2)) % lower surface
+plot(x_b2, y_b2) % upper surface
+plot(x_b2, y_b2) % lower surface
 xlabel("x")
 ylabel("y")
 title("NACA 2421")
