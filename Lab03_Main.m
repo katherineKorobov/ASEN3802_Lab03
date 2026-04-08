@@ -123,7 +123,7 @@ end
 
 zero_lift_aoa_0006 = interp1(cl_0006, alpha, 0, "linear"); % find alpha for cl = 0 -> L = 0
 zero_lift_aoa_0012 = interp1(cl_0012, alpha, 0, "linear");
-zero_lift_a0a_0018 = interp1(cl_0018, alpha, 0, "linear");
+zero_lift_aoa_0018 = interp1(cl_0018, alpha, 0, "linear");
 
 lift_slope_0006 = calculateLiftSlope(alpha, cl_0006);
 lift_slope_0012 = calculateLiftSlope(alpha, cl_0012);
@@ -174,11 +174,7 @@ title("Sectional Coefficient of Lift v. Angle of Attack for Varying Airfoil Data
 
 %% Task 4: Effect of Airfoil Camber on Lift
 
-% create range for alpha
-alpha = linspace(-10, 10, 20); % [deg]
-
-num_panels = 28; % from Task 2
-
+% * Uses same alpha and num_panels
 % Airfoil params
 param_0012 = struct("m", 0, "p", 0, "t", 0.12 * c);
 param_2412 = struct("m", 0.02, "p", 0.4, "t", 0.12 * c);
@@ -246,7 +242,7 @@ cl_TAT_0012 = 2*pi*(alpha_rad - zero_lift_aoa_TAT_0012);
 cl_TAT_2412 = 2*pi*(alpha_rad - zero_lift_aoa_TAT_2412);
 cl_TAT_4412 = 2*pi*(alpha_rad - zero_lift_aoa_TAT_4412);
 
-lift_slope_TAT = 2*pi/180; 
+lift_slope_TAT = 2*pi * (pi / 180); 
 
 % Combined Plot
 figure();
@@ -269,18 +265,3 @@ xlim([-11, 11]);
 xlabel("Angle of Attack [deg]");
 ylabel("Sectional Coefficient of Lift");
 title("Sectional Coefficient of Lift v. Angle of Attack for Varying Airfoil Camber");
-
-
-% Zero-Lift AoA table
-fprintf('\n--- Zero-Lift Angle of Attack [deg] ---\n');
-fprintf('%-12s %-12s %-12s %-12s\n', 'Airfoil', 'VPM', 'TAT', 'Experimental');
-fprintf('%-12s %-12.4f %-12.4f %-12.4f\n', 'NACA 0012', zero_lift_aoa_0012, zero_lift_aoa_TAT_0012, zero_lift_aoa_exp_0012);
-fprintf('%-12s %-12.4f %-12.4f %-12.4f\n', 'NACA 2412', zero_lift_aoa_2412, zero_lift_aoa_TAT_2412, zero_lift_aoa_exp_2412);
-fprintf('%-12s %-12.4f %-12.4f %-12.4f\n', 'NACA 4412', zero_lift_aoa_4412, zero_lift_aoa_TAT_4412, zero_lift_aoa_exp_4412);
-
-% Lift Slope table
-fprintf('\n--- Lift Slope [per deg] ---\n');
-fprintf('%-12s %-12s %-12s %-12s\n', 'Airfoil', 'VPM', 'TAT', 'Experimental');
-fprintf('%-12s %-12.4f %-12.4f %-12.4f\n', 'NACA 0012', lift_slope_0012, lift_slope_TAT, lift_slope_exp_0012);
-fprintf('%-12s %-12.4f %-12.4f %-12.4f\n', 'NACA 2412', lift_slope_2412, lift_slope_TAT, lift_slope_exp_2412);
-fprintf('%-12s %-12.4f %-12.4f %-12.4f\n', 'NACA 4412', lift_slope_4412, lift_slope_TAT, lift_slope_exp_4412);
