@@ -102,7 +102,7 @@ alpha = linspace(-10, 10, 20); % [deg]
 param_0006 = struct("m", 0, "p", 0, "t", 0.06 * c);
 param_0018 = struct("m", 0, "p", 0, "t", 0.18 * c);
 
-num_panels = 20; % from Task 2
+num_panels = 28; % from Task 2
 
 % build airfoils
 [x_0006, y_0006] = NACA_airfoils(param_0006.m, param_0006.p, param_0006.t, c, num_panels);
@@ -125,9 +125,9 @@ zero_lift_aoa_0006 = interp1(cl_0006, alpha, 0, "linear"); % find alpha for cl =
 zero_lift_aoa_0012 = interp1(cl_0012, alpha, 0, "linear");
 zero_lift_0018 = interp1(cl_0018, alpha, 0, "linear");
 
-lift_slope_0006 = calculateLiftSlope(alpha, cl_0006);
-lift_slope_0012 = calculateLiftSlope(alpha, cl_0012);
-lift_slope_0018 = calculateLiftSlope(alpha, cl_0018);
+lift_slope_0006 = calculateLiftSlope(alpha, cl_0006) * (pi / 180);
+lift_slope_0012 = calculateLiftSlope(alpha, cl_0012) * (pi / 180);
+lift_slope_0018 = calculateLiftSlope(alpha, cl_0018) * (pi / 180);
 
 % Experimental Method
 data_0006 = load("NACA_0006_data.mat"); % collect experimental data
@@ -138,14 +138,19 @@ experimental_0012 = data_0012.data;
 zero_lift_aoa_exp_0006 = interp1(experimental_0006(:, 2), experimental_0006(:,1), 0, "linear");
 zero_lift_aoa_exp_0012 = interp1( experimental_0012(:, 2), experimental_0012(:,1), 0, "linear");
 
-lift_slope_exp_0006 = calculateLiftSlope(experimental_0006(:, 1), experimental_0006(:, 2));
-lift_slope_exp_0012 = calculateLiftSlope(experimental_0012(:, 1), experimental_0012(:, 2));
+lift_slope_exp_0006 = calculateLiftSlope(experimental_0006(:, 1), experimental_0006(:, 2)) * (pi / 180);
+lift_slope_exp_0012 = calculateLiftSlope(experimental_0012(:, 1), experimental_0012(:, 2)) * (pi / 180);
 
 % Thin Airfoil Theory (TAT)
 TAT_cl_0006 = calculateThinAirfoilCL(alpha);
 TAT_cl_0012 = calculateThinAirfoilCL(alpha);
 TAT_cl_0018 = calculateThinAirfoilCL(alpha);
 
+%TAT_zero_lift_aoa_0006 = ;
+%TAT_zero_lift_aoa_0012 = ;
+%TAT_zero_lift_aoa_0018 = ;
+
+[TAT_lift_slope_0006, TAT_lift_slope_0012, TAT_lift_slope_0018] = deal((2*pi) * (pi / 180)) ;
 
 % Combine
 figure();
