@@ -3,26 +3,30 @@ function zero_lift_alpha = calculateThinAirfoilZeroLiftAOA(airfoil_param, c)
 % using the Thin Airfoil Theory prediction.
 % 
 % Author: Katherine Korobov
-% Collaborators: 
+% Collaborators: Kiana Watson
 % Date: 4/8/2026
 
-    theta = linspace(0, pi, 20);
+    m = airfoil_param.m;
+    p = airfoil_param.p;
 
-    x = (c / 2) * (1- cos(theta));
+    theta = linspace(0, pi, 200);
 
-    dzdx = zeros(length(x));
+% x location along chord
+x = (c/2) * (1 - cos(theta));
+xc = x / c;   % nondimensional x/c
 
-    % Calculate the slope of the lift curve
-    for i = 1:length(x)
-        if x(i) < airfoil_param.p * c
-            dzdx(i) = (2 * airfoil_param.m / airfoil_param.p^2) * (airfoil_param.p - x(i)/c);
-        else
-            dzdx(i) = (2 * airfoil_param.m / (1 - airfoil_param.p)^2) * (airfoil_param.p - x(i)/c);
-        end
+% camber-line slope dz/dx
+dzdx = zeros(size(xc));
+
+for i = 1:length(xc)
+    if xc(i) < p
+        dzdx(i) = (2*m/p^2) * (p - xc(i));
+    else
+        dzdx(i) = (2*m/(1-p)^2) * (p - xc(i));
     end
+end
 
-    integrand = dzdx .* (cos(theta) - 1);
-    zero_lift_alpha = -(1/pi) * trapz(theta, integrand);
-    zero_lift_alpha = rad2deg(zero_lift_alpha);
+% Thin airfoil theory zero-lift AoA in radians
+zero_lift_alpha = -(1/pi) * trapz(theta, dzdx .* (1 - cos(theta)));
 
 end
