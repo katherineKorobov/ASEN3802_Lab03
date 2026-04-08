@@ -162,3 +162,71 @@ lift_slope_exp_0012 = calculateLiftSlope(experimental_0012(:, 1), experimental_0
 
 
 
+%% Task 3
+% create range for alpha
+alpha = linspace(-10, 10, 20); % [deg]
+
+% Vortex Panel Method
+% * NACA 0012 is defined above earlier
+param_0006 = struct("m", 0, "p", 0, "t", 0.06 * c);
+param_0018 = struct("m", 0, "p", 0, "t", 0.18 * c);
+
+num_panels = 20; % from Task 2
+
+% build airfoils
+[x_0006, y_0006] = NACA_airfoils(param_0006.m, param_0006.p, param_0006.t, c, num_panels);
+[x_0012, y_0012] = NACA_airfoils(param_0012.m, param_0012.p, param_0012.t, c, num_panels);
+[x_0018, y_0018] = NACA_airfoils(param_0018.m, param_0018.p, param_0018.t, c, num_panels);
+
+% we need to flip the x and y to go from trailing edge to leading edge
+% clockwise
+[flipped_x_0006, flipped_y_0006] = flipPositions(x_0006, y_0006);
+[flipped_x_0012, flipped_y_0012] = flipPositions(x_0012, y_0012);
+[flipped_x_0018, flipped_y_0018] = flipPositions(x_0018, y_0018);
+
+for i = 1:length(alpha)     
+    cl_0006(i) = Vortex_Panel(flipped_x_0006, flipped_y_0006, 1, alpha(i));
+    cl_0012(i) = Vortex_Panel(flipped_x_0012,flipped_y_0012, 1, alpha(i));
+    cl_0018(i) = Vortex_Panel(flipped_x_0018, flipped_y_0018, 1, alpha(i));
+end
+
+zero_lift_aoa_0006 = interp1(cl_0006, alpha, 0, "linear"); % find alpha for cl = 0 -> L = 0
+zero_lift_aoa_0012 = interp1(cl_0012, alpha, 0, "linear");
+zero_lift_0018 = interp1(cl_0018, alpha, 0, "linear");
+
+lift_slope_0006 = calculateLiftSlope(alpha, cl_0006);
+lift_slope_0012 = calculateLiftSlope(alpha, cl_0012);
+lift_slope_0018 = calculateLiftSlope(alpha, cl_0018);
+
+% Experimental Method
+data_0006 = load("NACA_0006_data.mat"); % collect experimental data
+data_0012 = load("NACA_0012_data.mat"); % collect experimental data
+experimental_0006 = data_0006.data;
+experimental_0012 = data_0012.data;
+
+zero_lift_aoa_exp_0006 = interp1(experimental_0006(:, 2), experimental_0006(:,1), 0, "linear");
+zero_lift_aoa_exp_0012 = interp1( experimental_0012(:, 2), experimental_0012(:,1), 0, "linear");
+
+lift_slope_exp_0006 = calculateLiftSlope(experimental_0006(:, 1), experimental_0006(:, 2));
+lift_slope_exp_0012 = calculateLiftSlope(experimental_0012(:, 1), experimental_0012(:, 2));
+
+% Thin Airfoil Theory
+
+
+% Combine
+figure();
+hold on;
+plot(alpha, cl_0006, "LineWidth", 1.5);
+plot(alpha, cl_0012, "LineWidth", 1.5);
+plot(alpha, cl_0018, "LineWidth", 1.5);
+plot(experimental_0006(:, 1), experimental_0006(:, 2), "LineWidth", 1.5);
+plot(experimental_0012(:, 1), experimental_0012(:, 2), "LineWidth", 1.5);
+hold off;
+legend("Predicted NACA 0006", "Predicted NACA 0012", "Predicted NACA 0018", ...
+    "Experimental NACA 0006", "Experimental NACA 0012", "Location","southeast");
+xlim([-11, 11]);
+xlabel("Angle of Attack [deg]");
+ylabel("Sectional Coefficient of Lift");
+title("Sectional Coefficient of Lift v. Angle of Attack for Varying Airfoil Data");
+
+% ** lift slope for TAT is 2pi
