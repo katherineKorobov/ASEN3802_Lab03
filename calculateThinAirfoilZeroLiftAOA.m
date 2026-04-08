@@ -6,7 +6,7 @@ function zero_lift_alpha = calculateThinAirfoilZeroLiftAOA(airfoil_param, c)
 % Collaborators: 
 % Date: 4/8/2026
 
-    theta = linspace(0, pi, 200);
+    theta = linspace(0, pi, 20);
 
     x = (c / 2) * (1- cos(theta));
 

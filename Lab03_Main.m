@@ -125,9 +125,9 @@ zero_lift_aoa_0006 = interp1(cl_0006, alpha, 0, "linear"); % find alpha for cl =
 zero_lift_aoa_0012 = interp1(cl_0012, alpha, 0, "linear");
 zero_lift_0018 = interp1(cl_0018, alpha, 0, "linear");
 
-lift_slope_0006 = calculateLiftSlope(alpha, cl_0006) * (pi / 180);
-lift_slope_0012 = calculateLiftSlope(alpha, cl_0012) * (pi / 180);
-lift_slope_0018 = calculateLiftSlope(alpha, cl_0018) * (pi / 180);
+lift_slope_0006 = calculateLiftSlope(alpha, cl_0006);
+lift_slope_0012 = calculateLiftSlope(alpha, cl_0012);
+lift_slope_0018 = calculateLiftSlope(alpha, cl_0018);
 
 % Experimental Method
 data_0006 = load("NACA_0006_data.mat"); % collect experimental data
@@ -138,17 +138,17 @@ experimental_0012 = data_0012.data;
 zero_lift_aoa_exp_0006 = interp1(experimental_0006(:, 2), experimental_0006(:,1), 0, "linear");
 zero_lift_aoa_exp_0012 = interp1( experimental_0012(:, 2), experimental_0012(:,1), 0, "linear");
 
-lift_slope_exp_0006 = calculateLiftSlope(experimental_0006(:, 1), experimental_0006(:, 2)) * (pi / 180);
-lift_slope_exp_0012 = calculateLiftSlope(experimental_0012(:, 1), experimental_0012(:, 2)) * (pi / 180);
+lift_slope_exp_0006 = calculateLiftSlope(experimental_0006(:, 1), experimental_0006(:, 2));
+lift_slope_exp_0012 = calculateLiftSlope(experimental_0012(:, 1), experimental_0012(:, 2));
 
 % Thin Airfoil Theory (TAT)
-TAT_cl_0006 = calculateThinAirfoilCL(alpha);
-TAT_cl_0012 = calculateThinAirfoilCL(alpha);
-TAT_cl_0018 = calculateThinAirfoilCL(alpha);
+TAT_cl_0006 = calculateThinAirfoilCL(alpha, param_0006, c);
+TAT_cl_0012 = calculateThinAirfoilCL(alpha, param_0012, c);
+TAT_cl_0018 = calculateThinAirfoilCL(alpha, param_0018, c);
 
-%TAT_zero_lift_aoa_0006 = ;
-%TAT_zero_lift_aoa_0012 = ;
-%TAT_zero_lift_aoa_0018 = ;
+TAT_zero_lift_aoa_0006 = calculateThinAirfoilZeroLiftAOA(param_0006, c);
+TAT_zero_lift_aoa_0012 = calculateThinAirfoilZeroLiftAOA(param_0012, c);
+TAT_zero_lift_aoa_0018 = calculateThinAirfoilZeroLiftAOA(param_0018, c);
 
 [TAT_lift_slope_0006, TAT_lift_slope_0012, TAT_lift_slope_0018] = deal((2*pi) * (pi / 180)) ;
 
@@ -170,5 +170,3 @@ xlim([-11, 11]);
 xlabel("Angle of Attack [deg]");
 ylabel("Sectional Coefficient of Lift");
 title("Sectional Coefficient of Lift v. Angle of Attack for Varying Airfoil Data");
-
-% ** lift slope for TAT is 2pi
