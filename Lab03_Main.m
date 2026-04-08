@@ -61,8 +61,9 @@ m = 0;
 p = 0;
 t = 12/100;
 alpha = 12; % degrees
+alpha_zero_lift = 0;
 v_inf = 50;
-c_l_actual = 1.25;
+c_l_actual = 2*pi*((12*pi/180)-alpha_zero_lift) % C_l = 2pi*(alpha-(zero lift AoA))
 N = 2;
 [x_b,y_b] = NACA_airfoils(m,p,t,c,N);
 
@@ -92,11 +93,14 @@ while abs(error(N)) > 0.01
 end
 
 figure()
-plot(2:N,error(2:N))
+plot(2:N,error(2:N)*100, LineWidth=2)
 hold on
-yline(0.01)
+grid on
+yline(-1, LineWidth=1.5)
+legend('Error', '1% error')
 xlabel('Number of Panels')
 ylabel('Percent Error')
+ylim([-250, 50])
 title('Convergence of the predicted sectional coefficient of lift (c_l) with respect to number of panels (N)')
 
 
