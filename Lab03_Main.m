@@ -53,7 +53,7 @@ hold off;
 alpha = 12; % degrees
 alpha_zero_lift = 0;
 v_inf = 50;
-c_l_actual = 2*pi*((12*pi/180)-alpha_zero_lift) % C_l = 2pi*(alpha-(zero lift AoA))
+c_l_actual = 2*pi*((12*pi/180)-alpha_zero_lift); % C_l = 2pi*(alpha-(zero lift AoA))
 N = 2;
 [x_b,y_b] = NACA_airfoils(param_0012.m, param_0012.p, param_0012.t,c,N);
 
@@ -95,7 +95,7 @@ title('Convergence of the predicted sectional coefficient of lift (c_l) with res
 
 %% Task 3
 % create range for alpha
-alpha = linspace(-10, 10, 20); % [deg]
+alpha = linspace(-10, 10, 200); % [deg]
 
 % Vortex Panel Method
 % * NACA 0012 is defined above earlier
@@ -123,7 +123,7 @@ end
 
 zero_lift_aoa_0006 = interp1(cl_0006, alpha, 0, "linear"); % find alpha for cl = 0 -> L = 0
 zero_lift_aoa_0012 = interp1(cl_0012, alpha, 0, "linear");
-zero_lift_0018 = interp1(cl_0018, alpha, 0, "linear");
+zero_lift_a0a_0018 = interp1(cl_0018, alpha, 0, "linear");
 
 lift_slope_0006 = calculateLiftSlope(alpha, cl_0006);
 lift_slope_0012 = calculateLiftSlope(alpha, cl_0012);
@@ -150,7 +150,7 @@ TAT_zero_lift_aoa_0006 = calculateThinAirfoilZeroLiftAOA(param_0006, c);
 TAT_zero_lift_aoa_0012 = calculateThinAirfoilZeroLiftAOA(param_0012, c);
 TAT_zero_lift_aoa_0018 = calculateThinAirfoilZeroLiftAOA(param_0018, c);
 
-[TAT_lift_slope_0006, TAT_lift_slope_0012, TAT_lift_slope_0018] = deal((2*pi) * (pi / 180)) ;
+[TAT_lift_slope_0006, TAT_lift_slope_0012, TAT_lift_slope_0018] = deal(2*pi * (pi/180));
 
 % Combine
 figure();
