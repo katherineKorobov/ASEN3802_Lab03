@@ -51,7 +51,7 @@ hold off;
 %% task 2
 % NACA 0012
 alpha = 12; % degrees
-alpha_zero_lift = 0;
+alpha_zero_lift = 0; % 0 for symmetric airfoils
 v_inf = 50;
 c_l_actual = 2*pi*((12*pi/180)-alpha_zero_lift) % C_l = 2pi*(alpha-(zero lift AoA))
 N = 2;
@@ -83,7 +83,7 @@ while abs(error(N)) > 0.01
 end
 
 figure()
-plot(2:N,error(2:N)*100, LineWidth=2)
+plot((2:N).*2,error(2:N)*100, LineWidth=2)
 hold on
 grid on
 yline(-1, LineWidth=1.5)
