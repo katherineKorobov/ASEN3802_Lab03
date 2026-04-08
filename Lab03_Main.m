@@ -5,7 +5,7 @@ clc; clear; close all;
 %   Task 2: Convergence study on number of panels using vortex panel method
 %
 % Authors: {Corey Hannum, John Heflin, Katherine Korobov, and Kiana Watson}
-% Date: {03/31/2026}
+% Date: {04/08/2026}
 
 
 %% Part 1
@@ -51,12 +51,13 @@ hold off;
 %% task 2
 % NACA 0012
 alpha = 12; % degrees
-alpha_zero_lift = 0;
+alpha_zero_lift = 0; % 0 for symmetric airfoils
 v_inf = 50;
 c_l_actual = 2*pi*((12*pi/180)-alpha_zero_lift); % C_l = 2pi*(alpha-(zero lift AoA))
 N = 2;
 [x_b,y_b] = NACA_airfoils(param_0012.m, param_0012.p, param_0012.t,c,N);
 
+% flip the arrays to start at TE and rotate CW
 if mod(N,2)==0
     xb = [flip(x_b(N+1:2*N)); x_b(2:N-1,1)];
     yb = [flip(y_b(N+1:2*N)); y_b(2:N-1,1)];
@@ -68,9 +69,11 @@ end
 CL(N) = Vortex_Panel(xb,yb,v_inf,alpha);
 error(N) = (CL(N) - c_l_actual)/c_l_actual;
 
+% loop until error is less than 1%
 while abs(error(N)) > 0.01
     N = N + 1;
     [x_b,y_b] = NACA_airfoils(param_0012.m, param_0012.p, param_0012.t,c,N);
+    % flip the arrays to start at TE and rotate CW
     if mod(N,2)==0
         xb = [flip(x_b(N+1:2*N)); x_b(2:N-1,1)];
         yb = [flip(y_b(N+1:2*N)); y_b(2:N-1,1)];
@@ -78,12 +81,13 @@ while abs(error(N)) > 0.01
         xb = [flip(x_b(N+2:2*N)); x_b(1:N-1,1)];
         yb = [flip(y_b(N+2:2*N)); y_b(1:N-1,1)];
     end
+    % calculate Cl and error
     CL(N) = Vortex_Panel(xb,yb,v_inf,alpha);
     error(N) = (CL(N) - c_l_actual)/c_l_actual;
 end
 
 figure()
-plot(2:N,error(2:N)*100, LineWidth=2)
+plot((2:N).*2,error(2:N)*100, LineWidth=2)
 hold on
 grid on
 yline(-1, LineWidth=1.5)
