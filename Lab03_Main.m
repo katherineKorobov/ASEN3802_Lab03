@@ -126,16 +126,16 @@ for i = 1:length(alpha)
 end
 
 zero_lift_aoa_0006 = interp1(cl_0006, alpha, 0, "linear"); % find alpha for cl = 0 -> L = 0
-zero_lift_aoa_0012 = interp1(cl_0012, alpha, 0, "linear");
-zero_lift_aoa_0018 = interp1(cl_0018, alpha, 0, "linear");
+zero_lift_aoa_0012 = interp1(cl_0012, alpha, 0, "linear"); % [deg]
+zero_lift_aoa_0018 = interp1(cl_0018, alpha, 0, "linear"); % [deg]
 
 lift_slope_0006 = calculateLiftSlope(alpha, cl_0006);
 lift_slope_0012 = calculateLiftSlope(alpha, cl_0012);
 lift_slope_0018 = calculateLiftSlope(alpha, cl_0018);
 
 % Experimental Method
-data_0006 = load("NACA_0006_data.mat"); % collect experimental data
-data_0012 = load("NACA_0012_data.mat"); % collect experimental data
+data_0006 = load("NACA_0006_data.mat"); % collect experimental data alpha in deg
+data_0012 = load("NACA_0012_data.mat"); % collect experimental data alpha in deg
 experimental_0006 = data_0006.data;
 experimental_0012 = data_0012.data;
 
@@ -150,9 +150,9 @@ TAT_cl_0006 = calculateThinAirfoilCL(alpha, param_0006, c);
 TAT_cl_0012 = calculateThinAirfoilCL(alpha, param_0012, c);
 TAT_cl_0018 = calculateThinAirfoilCL(alpha, param_0018, c);
 
-TAT_zero_lift_aoa_0006 = calculateThinAirfoilZeroLiftAOA(param_0006, c);
-TAT_zero_lift_aoa_0012 = calculateThinAirfoilZeroLiftAOA(param_0012, c);
-TAT_zero_lift_aoa_0018 = calculateThinAirfoilZeroLiftAOA(param_0018, c);
+TAT_zero_lift_aoa_0006 = rad2deg(calculateThinAirfoilZeroLiftAOA(param_0006, c)); 
+TAT_zero_lift_aoa_0012 = rad2deg(calculateThinAirfoilZeroLiftAOA(param_0012, c));
+TAT_zero_lift_aoa_0018 = rad2deg(calculateThinAirfoilZeroLiftAOA(param_0018, c));
 
 [TAT_lift_slope_0006, TAT_lift_slope_0012, TAT_lift_slope_0018] = deal(2*pi * (pi/180));
 
@@ -174,7 +174,6 @@ xlim([-11, 11]);
 xlabel("Angle of Attack [deg]");
 ylabel("Sectional Coefficient of Lift");
 title("Sectional Coefficient of Lift v. Angle of Attack for Varying Airfoil Data");
-
 
 %% Task 4: Effect of Airfoil Camber on Lift
 
@@ -206,9 +205,9 @@ for i = 1:length(alpha)
 end
 
 % Zero-Lift AoA for VP 
-zero_lift_aoa_0012 = interp1(cl_0012, alpha, 0, "linear");
-zero_lift_aoa_2412 = interp1(cl_2412, alpha, 0, "linear");
-zero_lift_aoa_4412 = interp1(cl_4412, alpha, 0, "linear");
+zero_lift_aoa_0012 = interp1(cl_0012, alpha, 0, "linear"); % [deg]
+zero_lift_aoa_2412 = interp1(cl_2412, alpha, 0, "linear"); % [deg]
+zero_lift_aoa_4412 = interp1(cl_4412, alpha, 0, "linear"); % [deg]
 
 % Lift slope for VP
 lift_slope_0012 = calculateLiftSlope(alpha, cl_0012);
@@ -237,14 +236,12 @@ lift_slope_exp_4412 = calculateLiftSlope(experimental_4412(:,1), experimental_44
 %Thin airfoil theory (TAT)
 %alpha_L0_0012 = calculateThinAirfoilZeroLiftAOA(param_0012, c);
 zero_lift_aoa_TAT_0012 = 0; 
-zero_lift_aoa_TAT_2412 = calculateThinAirfoilZeroLiftAOA(param_2412, c);
-zero_lift_aoa_TAT_4412 = calculateThinAirfoilZeroLiftAOA(param_4412, c);   
+zero_lift_aoa_TAT_2412 = rad2deg(calculateThinAirfoilZeroLiftAOA(param_2412, c));
+zero_lift_aoa_TAT_4412 = rad2deg(calculateThinAirfoilZeroLiftAOA(param_4412, c));   
 
-alpha_rad = deg2rad(alpha);
-
-cl_TAT_0012 = 2*pi*(alpha_rad - zero_lift_aoa_TAT_0012);
-cl_TAT_2412 = 2*pi*(alpha_rad - zero_lift_aoa_TAT_2412);
-cl_TAT_4412 = 2*pi*(alpha_rad - zero_lift_aoa_TAT_4412);
+cl_TAT_0012 = calculateThinAirfoilCL(alpha, param_0012, c);
+cl_TAT_2412 = calculateThinAirfoilCL(alpha, param_2412, c);
+cl_TAT_4412 = calculateThinAirfoilCL(alpha, param_4412, c);
 
 lift_slope_TAT = 2*pi * (pi / 180); 
 

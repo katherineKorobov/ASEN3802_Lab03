@@ -20,9 +20,9 @@ dzdx = zeros(size(xc));
 
 for i = 1:length(xc)
     if xc(i) < p
-        dzdx(i) = (2*m/p^2) * (p - xc(i));
+        dzdx(i) = -(2*m/p^2) * (p - xc(i));
     else
-        dzdx(i) = (2*m/(1-p)^2) * (p - xc(i));
+        dzdx(i) = -(2*m/(1-p)^2) * (p - xc(i));
     end
 end
 
