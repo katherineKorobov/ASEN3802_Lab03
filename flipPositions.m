@@ -1,7 +1,13 @@
 function [x_flipped,y_flipped] = flipPositions(x,y)
-
+% flipPositions flips the positions of the x and y coordinates for Vortex Panel Method.
+% 
 % Vortext panel method requires the x and y location sto be arranged in a 
 % clockwise order starting from teh trailing edge
+%
+% Author: Katherine Korobov
+% Collaborators: 
+% Date: 4/8/2026
+
 
 N = length(x)/2;
 
