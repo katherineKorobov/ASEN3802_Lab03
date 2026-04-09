@@ -2,7 +2,6 @@ function thin_airfoil_lift_cl = calculateThinAirfoilCL(alpha, airfoil_param, c)
 % calculateThinAirfoilCL finds the sectional lift coefficient from Thin
 % Airfoil Theory
 % 
-%
 % Author: Katherine Korobov
 % Collaborators: 
 % Date: 4/8/2026

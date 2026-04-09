@@ -2,8 +2,8 @@ function zero_lift_alpha = calculateThinAirfoilZeroLiftAOA(airfoil_param, c)
 % calculateThinAirfoilZeroLiftAOA determines the angle of attack at L = 0
 % using the Thin Airfoil Theory prediction.
 % 
-% Author: Katherine Korobov
-% Collaborators: Kiana Watson
+% Author: Kiana Watson
+% Collaborators: Katherine Korobov
 % Date: 4/8/2026
 
     m = airfoil_param.m;
