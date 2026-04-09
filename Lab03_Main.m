@@ -3,7 +3,10 @@ clc; clear; close all;
 % Part 1: Analysis of 2D Airfoils
 %   Task 1: NACA 4-digit Airfoil Generator
 %   Task 2: Convergence study on number of panels using vortex panel method
-%
+%   Task 3: Analysis of the accuracy of thin airfoil theory and vortex
+%   panel method for symmetric airfoils
+%   Task 4: Analysis of the accuracy of thin airfoil theory and vortex
+%   panel method for cambered airfoils
 % Authors: {Corey Hannum, John Heflin, Katherine Korobov, and Kiana Watson}
 % Date: {04/08/2026}
 
