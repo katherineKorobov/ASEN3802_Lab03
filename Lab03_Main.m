@@ -273,8 +273,34 @@ title("Sectional Coefficient of Lift v. Angle of Attack for Varying Airfoil Camb
 
 %% Part 02
 
-AR = [4, 6, 8, 10];
-taper_ratio = linspace(0, 1, 10000);
+%AR = [4, 6, 8, 10];
+b = 10; % [ft]
+taper_ratio = linspace(0, 1, 100);
+c_r = linspace(0, 1, length(taper_ratio));
+c_t = taper_ratio * c_r;
+
+N = 50; % same number of expansions from Anderson
+
+% Initialize values
+e = zeros(length(taper_ratio), 1);
+c_L = zeros(length(taper_ratio), 1);
+c_Di = zeros(length(taper_ratio), 1);
+
+for i = 1: length(taper_ratio)
+
+        [e(i), c_L(i), c_Di(i)] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, geo_r, N);
+end 
+
+figure();
+hold on;
+plot(taper_ratio, c_Di(1));
+plot(taper_ratio, c_Di(2));
+plot(taper_ratio, c_Di(3));
+plot(taper_ratio, c_Di(4));
+hold off;
+title("Induced Drag Factor as a Function of Taper Ratio");
+ylabel("Induced Drag Factor");
+xlabel("Taper Ratio [$frac{c_t}{c_r}]"); 
 
 
 
