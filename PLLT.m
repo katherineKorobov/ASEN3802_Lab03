@@ -21,7 +21,7 @@ function [e, c_L, c_Di] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, g
 % Collaborators: 
 % Date: April 4, 2026
 
-    thetas = linspace(0.0000000000001, pi/2 - 0.000000000001, N);
+    thetas = linspace(0.0000000000001, (pi/2) - 0.000000000001, N);
 
     geo_aoa_vals = varyGeoAoA(thetas, geo_t, geo_r);
     a0_vals = varyCrossSectionalLiftSlope(thetas, a0_t, a0_r);
@@ -34,7 +34,7 @@ function [e, c_L, c_Di] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, g
 
     for i = 1:N
         theta = thetas(i);
-        c = varyChordDistribution(theta);
+        c = varyChordDistribution(theta, c_r, c_t);
 
         a0 = a0_vals(i);
 
@@ -57,7 +57,8 @@ function [e, c_L, c_Di] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, g
         sum_term = sum_term + m * (A(n)/A(1))^2;
     end
     
-    AR = ((c_r + c_t) / 2) * b; % calculate aspect ratio assuming linear taper
+    S = (b/2) * (c_r + c_t);
+    AR = b^2 / S;
 
     e = 1 / (1 + sum_term); % calculate span efficiency factor
     c_L = A(1) * pi * AR;
