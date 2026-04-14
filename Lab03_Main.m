@@ -269,3 +269,12 @@ xlim([-11, 11]);
 xlabel("Angle of Attack [deg]");
 ylabel("Sectional Coefficient of Lift");
 title("Sectional Coefficient of Lift v. Angle of Attack for Varying Airfoil Camber");
+
+
+%% Part 02
+
+AR = [4, 6, 8, 10];
+taper_ratio = linspace(0, 1, 10000);
+
+
+
