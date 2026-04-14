@@ -299,16 +299,15 @@ for i = 1:length(AR)
         c_r = (2*b) / (AR(i) * (1 + taper));
         c_t = taper * c_r;
     
-        [e(i), c_L(i), c_Di(i, j)] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, geo_r, N);
+        [e(i,j), c_L(i), c_Di(i)] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, geo_r, N);
 
     end
 end
 
-
 figure();
 hold on;
 for i = 1:length(AR)
-    plot(taper_ratio, c_Di(i,:));
+    plot(taper_ratio, (1 ./ e(i, :)) - 1 );
 end
 hold off;
 title("Induced Drag Factor as a Function of Taper Ratio");

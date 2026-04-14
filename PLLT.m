@@ -18,16 +18,10 @@ function [e, c_L, c_Di] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, g
 %   N: number of odd terms to include in series expansion
 %
 % Author: Katherine Korobov
-% Collaborators: 
+% Collaborators: Corey Hannum, John Heflin, Kiana Watson
 % Date: April 4, 2026
 
     thetas = linspace(0.0000000000001, (pi/2) - 0.000000000001, N);
-
-    geo_aoa_vals = varyGeoAoA(thetas, geo_t, geo_r);
-    a0_vals = varyCrossSectionalLiftSlope(thetas, a0_t, a0_r);
-    zero_lift_aoa_vals = varyZeroLiftAoA(thetas, aero_t, aero_r);
-
-    LHS = geo_aoa_vals - zero_lift_aoa_vals;
 
     % build coefficient matrix
     coef = zeros(N, N);
@@ -35,8 +29,11 @@ function [e, c_L, c_Di] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, g
     for i = 1:N
         theta = thetas(i);
         c = varyChordDistribution(theta, c_r, c_t);
+        geo_aoa = varyGeoAoA(theta, geo_t, geo_r);
+        a0 = varyCrossSectionalLiftSlope(theta, a0_t, a0_r);
+        zero_lift_aoa = varyZeroLiftAoA(theta, aero_t, aero_r);
 
-        a0 = a0_vals(i);
+        LHS(i) = geo_aoa - zero_lift_aoa;
 
         for j = 1:N
             
@@ -47,7 +44,7 @@ function [e, c_L, c_Di] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, g
         end
     end
 
-    A = coef \ LHS;
+    A = coef \ LHS';
 
     % find delta
     sum_term = 0;
@@ -68,7 +65,6 @@ end
 
 
 function c = varyChordDistribution(theta, c_r, c_t) 
-
     if theta >= 0 && theta <= pi/2
         c = c_r - (c_r - c_t) * cos(theta); 
     else 
@@ -76,33 +72,31 @@ function c = varyChordDistribution(theta, c_r, c_t)
     end
 end
 
-function a0 = varyCrossSectionalLiftSlope(thetas, a0_t, a0_r)
+function a0 = varyCrossSectionalLiftSlope(theta, a0_t, a0_r)
  % * assume linear variation of cross sectional lift slope
-    if a0_t == a0_r
-        a0 = a0_t * ones(length(thetas), 1);
-    else
-        a0 = linspace(a0_t, a0_r, length(thetas));
+    if theta >= 0 && theta <= pi/2
+        a0 = a0_r - (a0_r - a0_t) * cos(theta); 
+    else 
+        a0 = a0_r - (a0_t - a0_r) * cos(theta);
     end
     
 end
 
-function aero_aoa = varyZeroLiftAoA(thetas, aero_t, aero_r)
+function aero_aoa = varyZeroLiftAoA(theta, aero_t, aero_r)
 % * assume linear variation of zero lift a0a
 
-    if aero_t == aero_r
-        aero_aoa = aero_t * ones(length(thetas), 1);
-    else
-        aero_aoa = linspace(aero_t, aero_r, length(thetas));
+    if theta >= 0 && theta <= pi/2
+        aero_aoa = aero_r - (aero_r - aero_t) * cos(theta); 
+    else 
+        aero_aoa = aero_r - (aero_t - aero_r) * cos(theta);
     end
 end
 
-function geo_aoa = varyGeoAoA(thetas, geo_t, geo_r)
+function geo_aoa = varyGeoAoA(theta, geo_t, geo_r)
 % ** assume linear variation of geometric angle of attack
-
-    if geo_t == geo_r
-        geo_aoa = geo_t * ones(length(thetas),1);
-
+    if theta >= 0 && theta <= pi/2
+        geo_aoa = geo_r - (geo_r - geo_t) * cos(theta); 
     else 
-        geo_aoa = linspace(geo_t, geo_r, length(thetas));
+        geo_aoa = geo_r - (geo_t - geo_r) * cos(theta);
     end
 end
