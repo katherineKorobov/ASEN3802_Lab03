@@ -274,8 +274,8 @@ title("Sectional Coefficient of Lift v. Angle of Attack for Varying Airfoil Camb
 %% Part 02
 
 AR = [4, 6, 8, 10];
-b = 40; % [ft]
-taper_ratio = linspace(0.0001, 1, 100);
+b = 10; % [ft]
+taper_ratio = linspace(0, 1, 100);
 
 N = 50; % same number of expansions from Anderson
 
@@ -286,8 +286,8 @@ c_Di = zeros(length(AR), length(taper_ratio));
 
 a0_t = 2 * pi; 
 a0_r = 2 * pi; 
-aero_t = -3 * (pi/ 180); 
-aero_r = -3 * (pi/180); 
+aero_t = -3; 
+aero_r = -3; 
 geo_t = 0; 
 geo_r = 0;
 
@@ -299,7 +299,7 @@ for i = 1:length(AR)
         c_r = (2*b) / (AR(i) * (1 + taper));
         c_t = taper * c_r;
     
-        [e(i,j), c_L(i), c_Di(i)] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, geo_r, N);
+        [e(i,j), c_L(i,j), c_Di(i,j)] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, geo_r, N);
 
     end
 end
@@ -307,14 +307,15 @@ end
 figure();
 hold on;
 for i = 1:length(AR)
-    plot(taper_ratio, (1 ./ e(i, :)) - 1 );
+    plot(taper_ratio, (1 ./ e(i, :)) - 1, "LineWidth", 1.5);
 end
 hold off;
+grid on;
 title("Induced Drag Factor as a Function of Taper Ratio");
 ylabel("Induced Drag Factor");
-xlabel("Taper Ratio [$frac{c_t}{c_r}]"); 
-ylim([0, 0.16]);
-legend("");
+xlabel("Taper Ratio [$\frac{c_t}{c_r}$]"); 
+ylim([0, 0.18]);
+legend("AR 4", "AR 6", "AR 8", "AR 10");
 
 
 

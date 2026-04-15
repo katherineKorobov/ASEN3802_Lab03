@@ -21,7 +21,12 @@ function [e, c_L, c_Di] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, g
 % Collaborators: Corey Hannum, John Heflin, Kiana Watson
 % Date: April 4, 2026
 
-    thetas = linspace(0.0000000000001, (pi/2) - 0.000000000001, N);
+    aero_t = deg2rad(aero_t);
+    aero_r = deg2rad(aero_r);
+    geo_t  = deg2rad(geo_t);
+    geo_r  = deg2rad(geo_r);
+    
+    thetas = (1:N) * pi / (2*N);
 
     % build coefficient matrix
     coef = zeros(N, N);
@@ -39,7 +44,7 @@ function [e, c_L, c_Di] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, g
             
             m = 2*j - 1; % odd mode index
             
-            coef(i,j) = sin(m * theta) * (((2*b)/(a0*c)) + (m / sin(theta)));
+            coef(i,j) = sin(m * theta) * (((4*b)/(a0*c)) + (m / sin(theta)));
             
         end
     end
@@ -48,7 +53,6 @@ function [e, c_L, c_Di] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, g
 
     % find delta
     sum_term = 0;
-
     for n = 2:N
         m = 2*n - 1;
         sum_term = sum_term + m * (A(n)/A(1))^2;
@@ -65,38 +69,22 @@ end
 
 
 function c = varyChordDistribution(theta, c_r, c_t) 
-    if theta >= 0 && theta <= pi/2
-        c = c_r - (c_r - c_t) * cos(theta); 
-    else 
-        c = c_r - (c_t - c_r) * cos(theta);
-    end
+    c = c_r - (c_r - c_t) * abs(cos(theta)); 
+
 end
 
 function a0 = varyCrossSectionalLiftSlope(theta, a0_t, a0_r)
  % * assume linear variation of cross sectional lift slope
-    if theta >= 0 && theta <= pi/2
-        a0 = a0_r - (a0_r - a0_t) * cos(theta); 
-    else 
-        a0 = a0_r - (a0_t - a0_r) * cos(theta);
-    end
+    a0 = a0_r - (a0_r - a0_t) * abs(cos(theta)); 
     
 end
 
 function aero_aoa = varyZeroLiftAoA(theta, aero_t, aero_r)
 % * assume linear variation of zero lift a0a
-
-    if theta >= 0 && theta <= pi/2
-        aero_aoa = aero_r - (aero_r - aero_t) * cos(theta); 
-    else 
-        aero_aoa = aero_r - (aero_t - aero_r) * cos(theta);
-    end
+    aero_aoa = aero_r - (aero_r - aero_t) * abs(cos(theta)); 
 end
 
 function geo_aoa = varyGeoAoA(theta, geo_t, geo_r)
 % ** assume linear variation of geometric angle of attack
-    if theta >= 0 && theta <= pi/2
-        geo_aoa = geo_r - (geo_r - geo_t) * cos(theta); 
-    else 
-        geo_aoa = geo_r - (geo_t - geo_r) * cos(theta);
-    end
+    geo_aoa = geo_r - (geo_r - geo_t) * abs(cos(theta)); 
 end
