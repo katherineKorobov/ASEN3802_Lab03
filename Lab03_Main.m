@@ -13,7 +13,7 @@ clc; clear; close all;
 set(groot, "defaultAxesTickLabelInterpreter","latex"); 
 set(groot, "defaultLegendInterpreter","latex");
 set(groot, "defaultTextInterpreter", "latex");
-set(groot,"defaultAxesfontsize",14)
+set(groot,"defaultAxesfontsize", 14)
 %% Part 1
 %% Task 1
 c=1; % chord length (m)
@@ -313,7 +313,7 @@ for i = 1:length(AR)
 end
 hold off;
 grid on;
-title("Induced Drag Factor as a Function of Taper Ratio", "FontSize", 14);
+title("Induced Drag Factor as a Function of Taper Ratio", "FontSize", 16);
 ylabel("Induced Drag Factor");
 xlabel("Taper Ratio"); 
 legend("AR 4", "AR 6", "AR 8", "AR 10", "Fontsize", 14);
