@@ -8,9 +8,12 @@ clc; clear; close all;
 %   Task 4: Analysis of the accuracy of thin airfoil theory and vortex
 %   panel method for cambered airfoils
 % Authors: {Corey Hannum, John Heflin, Katherine Korobov, and Kiana Watson}
-% Date: {04/08/2026}
+% Date: {04/14/2026}
 
-
+set(groot, "defaultAxesTickLabelInterpreter","latex"); 
+set(groot, "defaultLegendInterpreter","latex");
+set(groot, "defaultTextInterpreter", "latex");
+set(groot,"defaultAxesfontsize",14)
 %% Part 1
 %% Task 1
 c=1; % chord length (m)
@@ -98,7 +101,7 @@ legend('Error', '1% error')
 xlabel('Number of Panels')
 ylabel('Percent Error')
 ylim([-250, 50])
-title('Convergence of the predicted sectional coefficient of lift (c_l) with respect to number of panels (N)')
+title('Convergence of the predicted sectional coefficient of lift ($c_l$) with respect to number of panels (N)')
 
 %% Task 3
 % create range for alpha
@@ -276,7 +279,6 @@ title("Sectional Coefficient of Lift v. Angle of Attack for Varying Airfoil Camb
 AR = [4, 6, 8, 10];
 b = 10; % [ft]
 taper_ratio = linspace(0, 1, 100);
-
 N = 50; % same number of expansions from Anderson
 
 % Initialize values
@@ -311,11 +313,10 @@ for i = 1:length(AR)
 end
 hold off;
 grid on;
-title("Induced Drag Factor as a Function of Taper Ratio");
+title("Induced Drag Factor as a Function of Taper Ratio", "FontSize", 14);
 ylabel("Induced Drag Factor");
-xlabel("Taper Ratio [$\frac{c_t}{c_r}$]"); 
-ylim([0, 0.18]);
-legend("AR 4", "AR 6", "AR 8", "AR 10");
+xlabel("Taper Ratio"); 
+legend("AR 4", "AR 6", "AR 8", "AR 10", "Fontsize", 14);
 
 
 
