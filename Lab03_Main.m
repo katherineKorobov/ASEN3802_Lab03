@@ -13,46 +13,55 @@ clc; clear; close all;
 set(groot, "defaultAxesTickLabelInterpreter","latex"); 
 set(groot, "defaultLegendInterpreter","latex");
 set(groot, "defaultTextInterpreter", "latex");
-set(groot,"defaultAxesfontsize", 14)
-%% Part 1
+set(groot,"defaultAxesfontsize", 14);
+
+%% Part 01
+plotNACA0021 = 0; % plot toggle
+plotNACA2421 = 0; % plot toggle
+plotPredictedCL = 0; % plot toggle
+plotThickAirfoil = 0; % plot toggle
+plotAirfoilCamber = 0; % plot toggle
+
 %% Task 1
 c=1; % chord length (m)
 N=50; % number of panels
 
 %NACA 0021 ----------------
 param_0012 = struct("m", 0, "p", 0, "t", 0.12 * c);
+[x_0021, y_0021] = NACA_airfoils(param_0012.m, param_0012.p, param_0012.t, c, N); 
 
-[x_b, y_b] = NACA_airfoils(param_0012.m, param_0012.p, param_0012.t, c, N); 
-figure
-hold on; 
-plot(x_b(1:N), y_b(1:N),'b') % upper surface
-plot(x_b(N+1:2.*N), y_b(N+1:2.*N),'b') % lower surface
-xlabel("x")
-ylabel("y")
-xlim([0,c]);
-ylim([-c./2,c./2]);
-title("NACA 0021")
-hold off;
+if plotNACA0021
+    figure
+    hold on; 
+    plot(x_0021(1:N), y_0021(1:N),'b') % upper surface
+    plot(x_0021(N+1:2.*N), y_0021(N+1:2.*N),'b') % lower surface
+    xlabel("x")
+    ylabel("y")
+    xlim([0,c]);
+    ylim([-c./2,c./2]);
+    title("NACA 0021")
+    hold off;
+end
 
 %NACA 2421 ----------------
 param_2421 = struct("m",0.02 * c, "p", 0.40 * c ,"t", 0.21 * c); 
+[x_2421, y_2421] = NACA_airfoils(param_2421.m, param_2421.p, param_2421.t, c, N); 
+y_c=y_2421(1:N)+y_2421(N+1:2.*N);
 
-[x_b2, y_b2] = NACA_airfoils(param_2421.m, param_2421.p, param_2421.t, c, N); 
-y_c=y_b2(1:N)+y_b2(N+1:2.*N);
-
-figure
-hold on; 
-plot(x_b2(1:N), y_b2(1:N),'b') % upper surface
-plot(x_b2(N+1:2.*N), y_b2(N+1:2.*N),'b') % lower surface
-plot(x_b2(1:N),y_c,'k')
-xlabel("x")
-ylabel("y")
-xlim([0,c]);
-ylim([-c./2,c./2]);
-legend('NACA 2421','NACA 2421','Mean chamberline')
-title("NACA 2421")
-hold off; 
-
+if plotNACA2421
+    figure
+    hold on; 
+    plot(x_2421(1:N), y_2421(1:N),'b') % upper surface
+    plot(x_2421(N+1:2.*N), y_2421(N+1:2.*N),'b') % lower surface
+    plot(x_2421(1:N),y_c,'k')
+    xlabel("x")
+    ylabel("y")
+    xlim([0,c]);
+    ylim([-c./2,c./2]);
+    legend('NACA 2421','NACA 2421','Mean chamberline')
+    title("NACA 2421")
+    hold off; 
+end
 
 %% task 2
 % NACA 0012
@@ -61,15 +70,15 @@ alpha_zero_lift = 0; % 0 for symmetric airfoils
 v_inf = 50;
 c_l_actual = 2*pi*((12*pi/180)-alpha_zero_lift); % C_l = 2pi*(alpha-(zero lift AoA))
 N = 2;
-[x_b,y_b] = NACA_airfoils(param_0012.m, param_0012.p, param_0012.t,c,N);
+[x_0021_2,y_0021_2] = NACA_airfoils(param_0012.m, param_0012.p, param_0012.t,c,N);
 
 % flip the arrays to start at TE and rotate CW
 if mod(N,2)==0
-    xb = [flip(x_b(N+1:2*N)); x_b(2:N-1,1)];
-    yb = [flip(y_b(N+1:2*N)); y_b(2:N-1,1)];
+    xb = [flip(x_0021_2(N+1:2*N)); x_0021_2(2:N-1,1)];
+    yb = [flip(y_0021_2(N+1:2*N)); y_0021_2(2:N-1,1)];
 else
-    xb = [flip(x_b(N+2:2*N)); x_b(1:N-1,1)];
-    yb = [flip(y_b(N+2:2*N)); y_b(1:N-1,1)];
+    xb = [flip(x_0021_2(N+2:2*N)); x_0021_2(1:N-1,1)];
+    yb = [flip(y_0021_2(N+2:2*N)); y_0021_2(1:N-1,1)];
 end
 
 CL(N) = Vortex_Panel(xb,yb,v_inf,alpha);
@@ -78,30 +87,32 @@ error(N) = (CL(N) - c_l_actual)/c_l_actual;
 % loop until error is less than 1%
 while abs(error(N)) > 0.01
     N = N + 1;
-    [x_b,y_b] = NACA_airfoils(param_0012.m, param_0012.p, param_0012.t,c,N);
+    [x_0021_2,y_0021_2] = NACA_airfoils(param_0012.m, param_0012.p, param_0012.t,c,N);
     % flip the arrays to start at TE and rotate CW
     if mod(N,2)==0
-        xb = [flip(x_b(N+1:2*N)); x_b(2:N-1,1)];
-        yb = [flip(y_b(N+1:2*N)); y_b(2:N-1,1)];
+        xb = [flip(x_0021_2(N+1:2*N)); x_0021_2(2:N-1,1)];
+        yb = [flip(y_0021_2(N+1:2*N)); y_0021_2(2:N-1,1)];
     else
-        xb = [flip(x_b(N+2:2*N)); x_b(1:N-1,1)];
-        yb = [flip(y_b(N+2:2*N)); y_b(1:N-1,1)];
+        xb = [flip(x_0021_2(N+2:2*N)); x_0021_2(1:N-1,1)];
+        yb = [flip(y_0021_2(N+2:2*N)); y_0021_2(1:N-1,1)];
     end
     % calculate Cl and error
     CL(N) = Vortex_Panel(xb,yb,v_inf,alpha);
     error(N) = (CL(N) - c_l_actual)/c_l_actual;
 end
 
-figure()
-plot((2:N).*2,error(2:N)*100, LineWidth=2)
-hold on
-grid on
-yline(-1, LineWidth=1.5)
-legend('Error', '1% error')
-xlabel('Number of Panels')
-ylabel('Percent Error')
-ylim([-250, 50])
-title('Convergence of the predicted sectional coefficient of lift ($c_l$) with respect to number of panels (N)')
+if plotPredictedCL
+    figure()
+    plot((2:N).*2,error(2:N)*100, LineWidth=2)
+    hold on
+    grid on
+    yline(-1, LineWidth=1.5)
+    legend('Error', '1% error')
+    xlabel('Number of Panels')
+    ylabel('Percent Error')
+    ylim([-250, 50])
+    title('Convergence of the predicted sectional coefficient of lift ($c_l$) with respect to number of panels (N)')
+end
 
 %% Task 3
 % create range for alpha
@@ -163,26 +174,27 @@ TAT_zero_lift_aoa_0018 = rad2deg(calculateThinAirfoilZeroLiftAOA(param_0018, c))
 [TAT_lift_slope_0006, TAT_lift_slope_0012, TAT_lift_slope_0018] = deal(2*pi * (pi/180));
 
 % Combine
-figure();
-hold on;
-plot(alpha, cl_0006,"-" ,"LineWidth", 1.5);
-plot(alpha, cl_0012, "-" ,"LineWidth", 1.5);
-plot(alpha, cl_0018, "-","LineWidth", 1.5);
-plot(experimental_0006(:, 1), experimental_0006(:, 2), ":" ,"LineWidth", 1.5);
-plot(experimental_0012(:, 1), experimental_0012(:, 2), ":", "LineWidth", 1.5);
-plot(alpha, TAT_cl_0006, "--", "LineWidth", 1.5);
-plot(alpha, TAT_cl_0012, "--", "LineWidth", 1.5);
-plot(alpha, TAT_cl_0018, "--", "LineWidth", 1.5);
-hold off;
-legend("Vortex Panel NACA 0006", "Vortex Panel NACA 0012", "Vortex Panel NACA 0018", ...
-    "Experimental NACA 0006", "Experimental NACA 0012", "TAT NACA 0006", "TAT NACA 0012", "TAT NACA 0018", "Location","southeast");
-xlim([-11, 11]);
-xlabel("Angle of Attack [deg]");
-ylabel("Sectional Coefficient of Lift");
-title("Sectional Coefficient of Lift v. Angle of Attack for Varying Airfoil Data");
+if plotThickAirfoil
+    figure();
+    hold on;
+    plot(alpha, cl_0006,"-" ,"LineWidth", 1.5);
+    plot(alpha, cl_0012, "-" ,"LineWidth", 1.5);
+    plot(alpha, cl_0018, "-","LineWidth", 1.5);
+    plot(experimental_0006(:, 1), experimental_0006(:, 2), ":" ,"LineWidth", 1.5);
+    plot(experimental_0012(:, 1), experimental_0012(:, 2), ":", "LineWidth", 1.5);
+    plot(alpha, TAT_cl_0006, "--", "LineWidth", 1.5);
+    plot(alpha, TAT_cl_0012, "--", "LineWidth", 1.5);
+    plot(alpha, TAT_cl_0018, "--", "LineWidth", 1.5);
+    hold off;
+    legend("Vortex Panel NACA 0006", "Vortex Panel NACA 0012", "Vortex Panel NACA 0018", ...
+        "Experimental NACA 0006", "Experimental NACA 0012", "TAT NACA 0006", "TAT NACA 0012", "TAT NACA 0018", "Location","southeast");
+    xlim([-11, 11]);
+    xlabel("Angle of Attack [deg]");
+    ylabel("Sectional Coefficient of Lift");
+    title("Sectional Coefficient of Lift v. Angle of Attack for Varying Airfoil Data");
+end
 
 %% Task 4: Effect of Airfoil Camber on Lift
-
 % * Uses same alpha and num_panels
 % Airfoil params
 param_0012 = struct("m", 0, "p", 0, "t", 0.12 * c);
@@ -252,30 +264,34 @@ cl_TAT_4412 = calculateThinAirfoilCL(alpha, param_4412, c);
 lift_slope_TAT = 2*pi * (pi / 180); 
 
 % Combined Plot
-figure();
-hold on;
-plot(alpha, cl_0012, 'b:', "LineWidth", 2);
-plot(alpha, cl_2412, 'g:', "LineWidth", 2);
-plot(alpha, cl_4412, 'm:', "LineWidth", 2);
-plot(alpha, cl_TAT_0012, "b", "LineWidth", 1.5);
-plot(alpha, cl_TAT_2412, "g", "LineWidth", 1.5);
-plot(alpha, cl_TAT_4412, "m", "LineWidth", 1.5);
-plot(experimental_0012(:,1), experimental_0012(:,2), 'b--', "LineWidth", 1.5);
-plot(experimental_2412(:,1), experimental_2412(:,2), 'g--', "LineWidth", 1.5);
-plot(experimental_4412(:,1), experimental_4412(:,2), 'm--', "LineWidth", 1.5);
-hold off;
-legend("Predicted NACA 0012", "Predicted NACA 2412", "Predicted NACA 4412", ...
-    "TAT NACA 0012", "TAT NACA 2412", "TAT NACA 4412", ...
-    "Experimental NACA 0012", "Experimental NACA 2412", "Experimental NACA 4412", ...
-    "Location", "southeast");
-xlim([-11, 11]);
-xlabel("Angle of Attack [deg]");
-ylabel("Sectional Coefficient of Lift");
-title("Sectional Coefficient of Lift v. Angle of Attack for Varying Airfoil Camber");
+if plotAirfoilCamber
+    figure();
+    hold on;
+    plot(alpha, cl_0012, 'b:', "LineWidth", 2);
+    plot(alpha, cl_2412, 'g:', "LineWidth", 2);
+    plot(alpha, cl_4412, 'm:', "LineWidth", 2);
+    plot(alpha, cl_TAT_0012, "b", "LineWidth", 1.5);
+    plot(alpha, cl_TAT_2412, "g", "LineWidth", 1.5);
+    plot(alpha, cl_TAT_4412, "m", "LineWidth", 1.5);
+    plot(experimental_0012(:,1), experimental_0012(:,2), 'b--', "LineWidth", 1.5);
+    plot(experimental_2412(:,1), experimental_2412(:,2), 'g--', "LineWidth", 1.5);
+    plot(experimental_4412(:,1), experimental_4412(:,2), 'm--', "LineWidth", 1.5);
+    hold off;
+    legend("Predicted NACA 0012", "Predicted NACA 2412", "Predicted NACA 4412", ...
+        "TAT NACA 0012", "TAT NACA 2412", "TAT NACA 4412", ...
+        "Experimental NACA 0012", "Experimental NACA 2412", "Experimental NACA 4412", ...
+        "Location", "southeast");
+    xlim([-11, 11]);
+    xlabel("Angle of Attack [deg]");
+    ylabel("Sectional Coefficient of Lift");
+    title("Sectional Coefficient of Lift v. Angle of Attack for Varying Airfoil Camber");
+end
 
 
 %% Part 02
+plotInducedFactor = 0; % plot toggle
 
+%% Task 01
 AR = [4, 6, 8, 10];
 b = 10; % [ft]
 taper_ratio = linspace(0, 1, 100);
@@ -300,23 +316,23 @@ for i = 1:length(AR)
         taper = taper_ratio(j);
         c_r = (2*b) / (AR(i) * (1 + taper));
         c_t = taper * c_r;
-    
         [e(i,j), c_L(i,j), c_Di(i,j)] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, geo_r, N);
 
     end
 end
 
-figure();
-hold on;
-for i = 1:length(AR)
-    plot(taper_ratio, (1 ./ e(i, :)) - 1, "LineWidth", 1.5);
+if plotInducedFactor
+    figure();
+    hold on;
+    for i = 1:length(AR)
+        plot(taper_ratio, (1 ./ e(i, :)) - 1, "LineWidth", 1.5);
+    end
+    hold off;
+    grid on;
+    title("Induced Drag Factor as a Function of Taper Ratio", "FontSize", 16);
+    ylabel("Induced Drag Factor");
+    xlabel("Taper Ratio"); 
+    legend("AR 4", "AR 6", "AR 8", "AR 10", "Fontsize", 14);
 end
-hold off;
-grid on;
-title("Induced Drag Factor as a Function of Taper Ratio", "FontSize", 16);
-ylabel("Induced Drag Factor");
-xlabel("Taper Ratio"); 
-legend("AR 4", "AR 6", "AR 8", "AR 10", "Fontsize", 14);
 
-
-
+%% Part 03
