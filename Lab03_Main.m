@@ -373,7 +373,7 @@ geo_t_Cessna140 = 4;
 geo_r_Cessna140 = 5;
 c_t_Cessna140 = c_0012;
 c_r_Cessna140 = c_2412;
-
+%{
 [e_Cessna140, c_L_Cessna_140, c_Di_Cessna_140] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, aero_t_Cessna140, aero_r_Cessna140, geo_t_Cessna140, geo_r_Cessna140, N)
 
 
@@ -400,10 +400,33 @@ for i = 1:length(cessna__N)
     
     
 end
+%}
+mat=load("NACA_0012_cd.mat");
+cd_0012=mat.sorted_data;
+mat=load("NACA_2412_cd.mat");
+cd_2412=mat.sorted_data;
 
-
-alpha=linspace(-16,16,14);
+for i=1:length(cd_2412)
+cd(i)=(cd_0012(i,2)+cd_2412(i,2))./2;
+end
+alpha=linspace(-12,12,length(cd));
 for i=1:length(alpha)
 [e_alpha(i), c_L_alpha(i), c_Di_alpha(i)] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, aero_t_Cessna140, aero_r_Cessna140, alpha(i), alpha(i)+1, N);
 end
 
+C_D=Total_Drag(c_Di_alpha,cd);
+L_D_ratio=c_L_alpha./C_D;
+figure
+hold on 
+plot(alpha,C_D)
+xlabel('Angle of Attack (degrees)')
+ylabel('Total sectional coefficient of Drag')
+title('Total sectiona coefficient of drag versus angle of attack')
+hold off
+figure
+hold on
+plot(alpha,L_D_ratio)
+xlabel('Angle of Attack (degrees)')
+ylabel('L/D Ratio')
+title('L/D ratio versus angle of attack')
+hold off
