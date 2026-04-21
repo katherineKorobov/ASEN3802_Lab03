@@ -373,7 +373,7 @@ geo_t_Cessna140 = 4;
 geo_r_Cessna140 = 5;
 c_t_Cessna140 = c_0012;
 c_r_Cessna140 = c_2412;
-%{
+
 [e_Cessna140, c_L_Cessna_140, c_Di_Cessna_140] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, aero_t_Cessna140, aero_r_Cessna140, geo_t_Cessna140, geo_r_Cessna140, N)
 
 
@@ -400,7 +400,7 @@ for i = 1:length(cessna__N)
     
     
 end
-%}
+
 mat=load("NACA_0012_cd.mat");
 cd_0012=mat.sorted_data;
 mat=load("NACA_2412_cd.mat");
