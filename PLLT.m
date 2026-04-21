@@ -9,7 +9,7 @@ function [e, c_L, c_Di] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, g
 % Inputs:
 %   b: span [ft]
 %   a0_t: cross-sectional lift slope at tip [/rad]
-%   a0_r: corss-sectional lift slope at root [/rad]
+%   a0_r: cross-sectional lift slope at root [/rad]
 %   c_t: chord at tip [ft]
 %   c_r: chord at root [ft]
 %   aero_t: zero lift-angle of attack at tip [deg]
@@ -59,7 +59,7 @@ function [e, c_L, c_Di] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, g
 
     e = 1 / (1 + sum_term); % calculate span efficiency factor
     c_L = A(1) * pi * AR; % compute sectional lift
-    c_Di = c_L^2 / (pi * e * AR); % compute iduced drag coefficient
+    c_Di = c_L^2 / (pi * e * AR); % com pute iduced drag coefficient
 
 end
 

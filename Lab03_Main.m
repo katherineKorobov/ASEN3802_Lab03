@@ -227,7 +227,7 @@ zero_lift_aoa_0012 = interp1(cl_0012, alpha, 0, "linear"); % [deg]
 zero_lift_aoa_2412 = interp1(cl_2412, alpha, 0, "linear"); % [deg]
 zero_lift_aoa_4412 = interp1(cl_4412, alpha, 0, "linear"); % [deg]
 
-% Lift slope for VP
+% Lift slope for VP, a0
 lift_slope_0012 = calculateLiftSlope(alpha, cl_0012);
 lift_slope_2412 = calculateLiftSlope(alpha, cl_2412);
 lift_slope_4412 = calculateLiftSlope(alpha, cl_4412);
@@ -377,19 +377,26 @@ c_r_Cessna140 = c_2412;
 [e_Cessna140, c_L_Cessna_140, c_Di_Cessna_140] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, aero_t_Cessna140, aero_r_Cessna140, geo_t_Cessna140, geo_r_Cessna140, N)
 
 
+cessna_b = 33 + (4 / 12); % [ft]
+cessna_c_r = 5 + (4 / 12); % [ft]
+cessna_c_t = 3 + (8.5 / 12); % [ft]
 
+% we found the zero-lift angle of attack and lift slope of each of the
+% airfoils (NACA 0012 at tip and NACA 2412 at root). Reference the
+% variables: zero_lift_aoa_2412, zero_lift_aoa_0012, lift_slope_0012,
+% lift_slope_2412
 
+cessna_geo_r = 1; % [deg]
+cessna_geo_t = 0; % [deg]
+cessna_aoa = 4; % [deg]
 
+cessna_N = linspace(1, N, N);
 
-
-
-
-
-
-
-
-
-
-
-
-
+for i = 1:length(cessna__N)
+    
+    odd_term = 2 * i - 1;
+    [e(i), c_L(i), c_Di(i)] = PLLT(censsna_b, lift_slope_0012 , lift_slope_2412, cessna_c_t, cessna_c_r, ...
+                    zero_lift_aoa_0012, zero_lift_aoa_2412, cessna_geo_t, cessna_geo_r, N);
+    
+    
+end
