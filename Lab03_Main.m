@@ -221,7 +221,7 @@ for i = 1:length(alpha)
     cl_2412(i) = Vortex_Panel(flipped_x_2412, flipped_y_2412, 1, alpha(i));
     cl_4412(i) = Vortex_Panel(flipped_x_4412, flipped_y_4412, 1, alpha(i));
 end
-
+cl_ave=(cl_0012+cl_2412)./2;
 % Zero-Lift AoA for VP 
 zero_lift_aoa_0012 = interp1(cl_0012, alpha, 0, "linear"); % [deg]
 zero_lift_aoa_2412 = interp1(cl_2412, alpha, 0, "linear"); % [deg]
@@ -400,3 +400,4 @@ for i = 1:length(cessna__N)
     
     
 end
+
