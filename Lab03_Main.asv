@@ -336,22 +336,45 @@ if plotInducedFactor
 end
 
 %% Part 03
-c_2412=0.0254*((5*12)+4); % chord length (m)
-N=50; % number of panels
+c_2412=5+(4/12); % chord length (ft)
+N=100; % number of panels
 
 %NACA 2412 ----------------
 param_2412 = struct("m", 0.02, "p", 0.4, "t", 0.12 * c_2412);
 [x_2412, y_2412] = NACA_airfoils(param_2412.m, param_2412.p, param_2412.t, c_2412, N); 
 
-c_0012=0.0254*((3*12)+8.5); % chord length (m)
+c_0012=3+(8.5/12); % chord length (ft)
 
-%NACA 0021 ----------------
+%NACA 0012 ----------------
 param_0012 = struct("m", 0, "p", 0, "t", 0.12 * c_0012);
-[x_0021, y_0021] = NACA_airfoils(param_0012.m, param_0012.p, param_0012.t, c_0012, N); 
+[x_0012, y_0012] = NACA_airfoils(param_0012.m, param_0012.p, param_0012.t, c_0012, N); 
+alpha = linspace(-10, 10, 200);
 
-b
+[flipped_x_2412, flipped_y_2412] = flipPositions(x_2412, y_2412);
+[flipped_x_0012, flipped_y_0012] = flipPositions(x_0012, y_0012);
 
-[e_Cessna_140, c_L_Cessna_140, c_Di_Cessna_140] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, geo_r, N);
+for i = 1:length(alpha)     
+    cl_2412(i) = Vortex_Panel(flipped_x_2412, flipped_y_2412, 1, alpha(i));
+    cl_0012(i) = Vortex_Panel(flipped_x_0012,flipped_y_0012, 1, alpha(i));
+end
+
+zero_lift_aoa_2412 = interp1(cl_2412, alpha, 0, "linear"); % find alpha for cl = 0 -> L = 0
+zero_lift_aoa_0012 = interp1(cl_0012, alpha, 0, "linear"); % find alpha for cl = 0 -> L = 0
+
+lift_slope_2412  = calculateLiftSlope(alpha, cl_2412);
+lift_slope_0012 = calculateLiftSlope(alpha, cl_0012);
+
+b_Cessna140 = 33+(4/12);
+a0_t_Cessna140 = lift_slope_0012*180/pi; 
+a0_r_Cessna140 = lift_slope_2412*180/pi; 
+aero_t_Cessna140 = zero_lift_aoa_0012; 
+aero_r_Cessna140 = zero_lift_aoa_2412; 
+geo_t_Cessna140 = 4; 
+geo_r_Cessna140 = 5;
+c_t_Cessna140 = c_0012;
+c_r_Cessna140 = c_2412;
+
+[e_Cessna140, c_L_Cessna_140, c_Di_Cessna_140] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, aero_t_Cessna140, aero_r_Cessna140, geo_t_Cessna140, geo_r_Cessna140, N)
 
 
 

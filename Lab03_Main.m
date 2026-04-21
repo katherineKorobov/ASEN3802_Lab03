@@ -336,14 +336,14 @@ if plotInducedFactor
 end
 
 %% Part 03
-c_2412=5+(4/12); % chord length (m)
+c_2412=5+(4/12); % chord length (ft)
 N=100; % number of panels
 
 %NACA 2412 ----------------
 param_2412 = struct("m", 0.02, "p", 0.4, "t", 0.12 * c_2412);
 [x_2412, y_2412] = NACA_airfoils(param_2412.m, param_2412.p, param_2412.t, c_2412, N); 
 
-c_0012=3+(8.5/12); % chord length (m)
+c_0012=3+(8.5/12); % chord length (ft)
 
 %NACA 0012 ----------------
 param_0012 = struct("m", 0, "p", 0, "t", 0.12 * c_0012);
