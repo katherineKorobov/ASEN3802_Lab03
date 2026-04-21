@@ -9,6 +9,6 @@ function lift_slope = calculateLiftSlope(alpha, cl)
 % Date: 4/8/2026
 
     p = polyfit(alpha, cl, 1);
-    lift_slope = p(1); % in deg
+    lift_slope = p(1); % in /deg
 
 end
