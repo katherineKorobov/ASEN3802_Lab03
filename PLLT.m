@@ -16,7 +16,7 @@ function [e, c_L, c_Di] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, g
 %   aero_r: zero-lift angle of attack at root [deg]
 %   geo_t: geometric angle of attack at tip [deg]
 %   geo_r: geometric angle of attack at root [deg]
-%   N: number of odd terms to include in series expansion
+%   N: number of odd terms to include in series expansion **
 %
 % Author: Katherine Korobov
 % Collaborators: Corey Hannum, John Heflin, Kiana Watson
@@ -59,7 +59,7 @@ function [e, c_L, c_Di] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t, g
 
     e = 1 / (1 + sum_term); % calculate span efficiency factor
     c_L = A(1) * pi * AR; % compute sectional lift
-    c_Di = c_L^2 / (pi * e * AR); % com pute iduced drag coefficient
+    c_Di = c_L^2 / (pi * e * AR); % compute iduced drag coefficient
 
 end
 
