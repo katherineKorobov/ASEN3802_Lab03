@@ -336,6 +336,11 @@ if plotInducedFactor
 end
 
 %% Part 03
+plotCL_Cessna = 1; % plot toggle
+plotCDi_Cessna = 1; % plot toggle
+
+
+%% Deliverable 1 and 2
 c_2412=5+(4/12); % chord length (ft)
 N=21; % number of panels
 
@@ -374,7 +379,7 @@ geo_r_Cessna140 = 5;
 c_t_Cessna140 = c_0012;
 c_r_Cessna140 = c_2412;
 
-cessna_N = linspace(1, 300, 300);
+cessna_N = linspace(1, 75, 75);
 for i = 1:length(cessna_N)
     
     odd_term(i) = 2 * i - 1;
@@ -441,14 +446,36 @@ for i = 1:length(cessna_N)
     end
 end
 
+if plotCL_Cessna
+    figure();
+    hold on;
+    plot(odd_term, c_L_Cessna140,"LineWidth", 1.5, "DisplayName", "Sectional Lift Coefficient");
+    xline(idx_CL_10, "--r", "LineWidth", 1.5, "DisplayName", "Required Terms for 10\% Error");
+    xline(idx_CL_1, "--r", "LineWidth", 1.5, "DisplayName", "Required Terms for 1\% Error");
+    xline(idx_CL_01, "--r", "LineWidth", 1.5, "DisplayName", "Required Terms for 0.1\% Error");
+    hold off;
+    grid on;
+    xlabel("Number of Odd Terms");
+    ylabel("Sectional Lift Coefficient");
+    title("Sectional Lift Coefficient versus Number of Odd Terms for Cessna 140");
+    legend();
+end
 
+if plotCDi_Cessna
+    figure();
+    hold on;
+    plot(odd_term, c_Di_Cessna140,"LineWidth", 1.5, "DisplayName", "Induced Drag Coefficient");
+    xline(idx_CDi_10, "--r", "LineWidth", 1.5, "DisplayName", "Required Terms for 10\% Error");
+    xline(idx_CDi_1, "--r", "LineWidth", 1.5, "DisplayName", "Required Terms for 1\% Error");
+    xline(idx_CDi_01, "--r", "LineWidth", 1.5, "DisplayName", "Required Terms for 0.1\% Error");
+    hold off;
+    grid on;
+    xlabel("Number of Odd Terms");
+    ylabel("Induced Drag Coefficient");
+    title("Induced Drag Coefficient versus Number of Odd Terms for Cessna 140");
+    legend();
+end
 
-figure()
-plot(cessna_N,c_L_Cessna140_error)
-hold on
-yline(10)
-yline(1)
-yline(0.1)
 
 alpha=linspace(-16,16,14);
 for i=1:length(alpha)
