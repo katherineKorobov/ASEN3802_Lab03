@@ -364,9 +364,9 @@ zero_lift_aoa_0012 = interp1(cl_0012, alpha, 0, "linear"); % find alpha for cl =
 lift_slope_2412  = calculateLiftSlope(alpha, cl_2412);
 lift_slope_0012 = calculateLiftSlope(alpha, cl_0012);
 
-b_Cessna140 = 33+(4/12);
-a0_t_Cessna140 = lift_slope_0012*180/pi; 
-a0_r_Cessna140 = lift_slope_2412*180/pi; 
+b_Cessna140 = 33+(4/12); % [ft]
+a0_t_Cessna140 = lift_slope_0012*180/pi; % [/rad]
+a0_r_Cessna140 = lift_slope_2412*180/pi; % [/rad]
 aero_t_Cessna140 = zero_lift_aoa_0012; 
 aero_r_Cessna140 = zero_lift_aoa_2412; 
 geo_t_Cessna140 = 4; 
@@ -375,50 +375,73 @@ c_t_Cessna140 = c_0012;
 c_r_Cessna140 = c_2412;
 
 cessna_N = linspace(1, 300, 300);
-
 for i = 1:length(cessna_N)
     
     odd_term(i) = 2 * i - 1;
-    [e_Cessna140(i), c_L_Cessna140(i), c_Di_Cessna140(i)] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, aero_t_Cessna140, aero_r_Cessna140, geo_t_Cessna140, geo_r_Cessna140, i);
+    [e_Cessna140(i), c_L_Cessna140(i), c_Di_Cessna140(i)] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, ...
+                                                            aero_t_Cessna140, aero_r_Cessna140, geo_t_Cessna140, geo_r_Cessna140, i);
    
-end
-
-alpha=linspace(-16,16,14);
-for i=1:length(alpha)
-[e_alpha(i), c_L_alpha(i), c_Di_alpha(i)] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, aero_t_Cessna140, aero_r_Cessna140, alpha(i), alpha(i)+1, N);
 end
 
 c_L_Cessna140_actual = c_L_Cessna140(length(c_L_Cessna140));
 c_Di_Cessna140_actual = c_Di_Cessna140(length(c_Di_Cessna140));
 
+found_CL_10 = false;
+found_CL_1 = false;
+found_CL_01 = false;
+
+found_CDi_10 = false;
+found_CDi_1 = false;
+found_CDi_01 = false;
+
 for i = 1:length(cessna_N)
-    c_L_Cessna140_error(i) = 100*((c_L_Cessna140(i) - c_L_Cessna140_actual)/c_L_Cessna140_actual);
-    c_Di_Cessna140_error(i) = 100*(c_Di_Cessna140(i) - c_Di_Cessna140_actual)/c_Di_Cessna140_actual;
+    
+    c_L_Cessna140_error = abs(100*((c_L_Cessna140(i) - c_L_Cessna140_actual)/c_L_Cessna140_actual));
+    c_Di_Cessna140_error = abs(100*(c_Di_Cessna140(i) - c_Di_Cessna140_actual)/c_Di_Cessna140_actual);
     
     % c_L error
-    if c_L_Cessna140_error(i) > 10
-        c_L_Cessna140_error_10 = c_L_Cessna140(i+1);
-        c_L_error_10_percent = i+1;
-    elseif c_L_Cessna140_error(i) > 1
-        c_L_Cessna140_error_1 = c_L_Cessna140(i+1);
-        c_L_error_1_percent = i+1;
-    elseif c_L_Cessna140_error(i) > 0.1
-        c_L_Cessna140_error_0_1 = c_L_Cessna140(i+1);
-        c_L_error_0_1_percent = i+1;
+    if ~found_CL_10 && c_L_Cessna140_error < 10
+
+        idx_CL_10 = i;
+        c_L_Cessna140_10 = c_L_Cessna140(i);
+        found_CL_10 = true;
+    end
+
+    if ~found_CL_1 && c_L_Cessna140_error < 1
+        
+        idx_CL_1 = i;
+        c_L_Cessna140_1 = c_L_Cessna140(i);
+        found_CL_1 = true;
+    end
+
+    if ~found_CL_01 && c_L_Cessna140_error < 0.1
+        idx_CL_01 = i;
+        c_L_Cessna140_0_1 = c_L_Cessna140(i);
+        found_CL_01 = true;
     end
 
     % c_Di error
-    if c_Di_Cessna140_error(i) > 10
-        c_Di_Cessna140_error_10 = c_Di_Cessna140(i+1);
-        c_Di_error_10_percent = i+1;
-    elseif c_Di_Cessna140_error(i) > 1
-        c_Di_Cessna140_error_1 = c_Di_Cessna140(i+1);
-        c_Di_error_1_percent = i+1;
-    elseif c_Di_Cessna140_error(i) > 0.1
-        c_Di_Cessna140_error_0_1 = c_Di_Cessna140(i+1);
-        c_Di_error_0_1_percent = i+1;
+    if ~found_CDi_10 && c_Di_Cessna140_error < 10
+        idx_CDi_10 = i;
+        c_Di_Cessna140_10 = c_Di_Cessna140(i);
+        found_CDi_10 = true;
+    end
+
+    if ~found_CDi_1 && c_Di_Cessna140_error < 1
+        idx_CDi_1 = i;
+        c_Di_Cessna140_1 = c_Di_Cessna140(i);
+        found_CDi_1 = true;
+    end
+
+    if ~found_CDi_01 && c_Di_Cessna140_error < 0.1
+        idx_CDi_01 = i;
+        c_Di_Cessna140_0_1 = c_Di_Cessna140(i);
+        found_CDi_01 = true;
+
     end
 end
+
+
 
 figure()
 plot(cessna_N,c_L_Cessna140_error)
@@ -427,3 +450,7 @@ yline(10)
 yline(1)
 yline(0.1)
 
+alpha=linspace(-16,16,14);
+for i=1:length(alpha)
+[e_alpha(i), c_L_alpha(i), c_Di_alpha(i)] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, aero_t_Cessna140, aero_r_Cessna140, alpha(i), alpha(i)+1, N);
+end
