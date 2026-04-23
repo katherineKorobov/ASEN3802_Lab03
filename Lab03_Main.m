@@ -476,8 +476,52 @@ if plotCDi_Cessna
     legend();
 end
 
-
 alpha=linspace(-16,16,14);
 for i=1:length(alpha)
 [e_alpha(i), c_L_alpha(i), c_Di_alpha(i)] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, aero_t_Cessna140, aero_r_Cessna140, alpha(i), alpha(i)+1, N);
 end
+
+
+
+
+mat=load("NACA_0012_cd.mat");
+cd_0012=mat.sorted_data;
+mat=load("NACA_2412_cd.mat");
+cd_2412=mat.sorted_data;
+alpha_0012=[-12;-10;-8;-6;-4;-2;-1;1;2;4;6;8;10;12]; %Digitizer gives in terms of C_l, angle of attack values for c_l values
+alpha_2412=[-8;-6;-4;-2;0;2;4;6;8;10;11;12.5]; %Digitizer gives in terms of C_l, angle of attack values for c_l values
+[p_0012,s_0012]=polyfit(alpha_0012,cd_0012(:,2),2); %Digitizer gives different sized arrays, curve fitting to create same size and allow for more data points
+[p_2412,s_2412]=polyfit(alpha_2412,cd_2412(:,2),2); %Digitizer gives different sized arrays, curve fitting to create same size and allow for more data points
+
+
+alpha=linspace(-12,12,100); %Maximum angle of attack range for digitizer
+
+cd_0012=polyval(p_0012,alpha); %Creating same sized arrays based on maximum angles of attack
+cd_2412=polyval(p_2412,alpha); %Creating same sized arrays based on maximum angles of attack
+
+cd=(cd_0012+cd_2412)./2; %Averaging profile Drags
+
+for i=1:length(alpha)
+[e_alpha(i), c_L_alpha(i), c_Di_alpha(i)] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, aero_t_Cessna140, aero_r_Cessna140, alpha(i), alpha(i)+1, N); %calculating induced drag and lift from PLLT
+end
+
+
+C_D=Total_Drag(c_Di_alpha,cd); %Calculating total drag
+L_D_ratio=c_L_alpha./C_D; %Calculating lift to drag ratio
+figure
+hold on 
+plot(alpha,C_D)
+plot(alpha,c_Di_alpha)
+plot(alpha,cd)
+xlabel('Angle of Attack (degrees)')
+ylabel('Total sectional coefficient of Drag')
+title('Total sectional coefficient of drag versus angle of attack')
+legend('Total Drag','Induced Drag','Sectional Drag Coefficient')
+hold off
+
+figure
+hold on
+plot(alpha,L_D_ratio)
+xlabel('Angle of Attack (degrees)')
+ylabel('L/D Ratio')
+title('L/D ratio versus angle of attack')
