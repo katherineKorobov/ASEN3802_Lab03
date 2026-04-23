@@ -487,7 +487,7 @@ alpha_2412=[-8;-6;-4;-2;0;2;4;6;8;10;11;12.5]; %Digitizer gives in terms of C_l,
 [p_2412,s_2412]=polyfit(alpha_2412,cd_2412(:,2),2); %Digitizer gives different sized arrays, curve fitting to create same size and allow for more data points
 
 
-alpha=linspace(-12,12,100); %Maximum angle of attack range for digitizer
+alpha=linspace(-15,15,100); %Maximum angle of attack range for digitizer
 
 cd_0012=polyval(p_0012,alpha); %Creating same sized arrays based on maximum angles of attack
 cd_2412=polyval(p_2412,alpha); %Creating same sized arrays based on maximum angles of attack
