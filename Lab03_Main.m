@@ -336,8 +336,8 @@ if plotInducedFactor
 end
 
 %% Part 03
-plotCL_Cessna = 1; % plot toggle
-plotCDi_Cessna = 1; % plot toggle
+plotCL_Cessna = 0; % plot toggle
+plotCDi_Cessna = 0; % plot toggle
 
 
 %% Deliverable 1 and 2
@@ -477,7 +477,28 @@ if plotCDi_Cessna
 end
 
 
+% ---------------- deliverable 3
+h_ft = 10000; % feet
+[T, a, P, rho] = atmosisa(h_ft * 0.3048);
+% Convert to English units
+T_F = T * 9/5 - 459.67; % Fahrenheit
+P_psi = P * 0.000145038; % psi
+rho_slugft3 = rho * 0.00194032; % slugs/ft^3
+v_inf = 100 * 1.68781; % knots to ft/s
+s = b_Cessna140 * (c_t_Cessna140 + c_r_Cessna140) * 0.5;
+
+
+
+L = 0.5 * rho_slugft3 * (v_inf^2) * c_L_Cessna140_0_1 * s;
+Di = 0.5 * rho_slugft3 * (v_inf^2) * c_Di_Cessna140_0_1 * s;
+c_d = (0.007 + 0.0055) / 2; % from C_l - C_d plots (0.007 + 0.0055) / 2
+D = 0.5 * rho_slugft3 * (v_inf^2) * (c_d + c_Di_Cessna140_0_1) * s;
+L_over_Di = L/D; 
+
 alpha=linspace(-16,16,14);
 for i=1:length(alpha)
-[e_alpha(i), c_L_alpha(i), c_Di_alpha(i)] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, aero_t_Cessna140, aero_r_Cessna140, alpha(i), alpha(i)+1, N);
+    [e_alpha(i), c_L_alpha(i), c_Di_alpha(i)] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, aero_t_Cessna140, aero_r_Cessna140, alpha(i), alpha(i)+1, N);
 end
+
+
+
