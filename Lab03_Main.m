@@ -476,13 +476,6 @@ if plotCDi_Cessna
     legend();
 end
 
-alpha=linspace(-16,16,14);
-for i=1:length(alpha)
-[e_alpha(i), c_L_alpha(i), c_Di_alpha(i)] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, aero_t_Cessna140, aero_r_Cessna140, alpha(i), alpha(i)+1, N);
-end
-
-
-
 
 mat=load("NACA_0012_cd.mat");
 cd_0012=mat.sorted_data;
@@ -525,3 +518,4 @@ plot(alpha,L_D_ratio)
 xlabel('Angle of Attack (degrees)')
 ylabel('L/D Ratio')
 title('L/D ratio versus angle of attack')
+
