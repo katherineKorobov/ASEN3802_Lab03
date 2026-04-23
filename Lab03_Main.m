@@ -336,8 +336,13 @@ if plotInducedFactor
 end
 
 %% Part 03
+plotCL_Cessna = 1; % plot toggle
+plotCDi_Cessna = 1; % plot toggle
+
+
+%% Deliverable 1 and 2
 c_2412=5+(4/12); % chord length (ft)
-N=100; % number of panels
+N=21; % number of panels
 
 %NACA 2412 ----------------
 param_2412 = struct("m", 0.02, "p", 0.4, "t", 0.12 * c_2412);
@@ -364,9 +369,9 @@ zero_lift_aoa_0012 = interp1(cl_0012, alpha, 0, "linear"); % find alpha for cl =
 lift_slope_2412  = calculateLiftSlope(alpha, cl_2412);
 lift_slope_0012 = calculateLiftSlope(alpha, cl_0012);
 
-b_Cessna140 = 33+(4/12);
-a0_t_Cessna140 = lift_slope_0012*180/pi; 
-a0_r_Cessna140 = lift_slope_2412*180/pi; 
+b_Cessna140 = 33+(4/12); % [ft]
+a0_t_Cessna140 = lift_slope_0012*180/pi; % [/rad]
+a0_r_Cessna140 = lift_slope_2412*180/pi; % [/rad]
 aero_t_Cessna140 = zero_lift_aoa_0012; 
 aero_r_Cessna140 = zero_lift_aoa_2412; 
 geo_t_Cessna140 = 4; 
@@ -374,36 +379,101 @@ geo_r_Cessna140 = 5;
 c_t_Cessna140 = c_0012;
 c_r_Cessna140 = c_2412;
 
-[e_Cessna140, c_L_Cessna_140, c_Di_Cessna_140] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, aero_t_Cessna140, aero_r_Cessna140, geo_t_Cessna140, geo_r_Cessna140, N)
-cessna_N = linspace(1, 300, 300);
-cessna_b = 33 + (4 / 12); % [ft]
-cessna_c_r = 5 + (4 / 12); % [ft]
-cessna_c_t = 3 + (8.5 / 12); % [ft]
-
-
-% we found the zero-lift angle of attack and lift slope of each of the
-% airfoils (NACA 0012 at tip and NACA 2412 at root). Reference the
-% variables: zero_lift_aoa_2412, zero_lift_aoa_0012, lift_slope_0012,
-% lift_slope_2412
-
-
-cessna_geo_r = 1; % [deg]
-cessna_geo_t = 0; % [deg]
-cessna_aoa = 4; % [deg]
-
-cessna_N = linspace(1, N, N);
-
-for i = 1:length(cessna_N)
-    
-    odd_term = 2 * i - 1;
-    [e(i), c_L(i), c_Di(i)] = PLLT(cessna_b, lift_slope_0012 , lift_slope_2412, cessna_c_t, cessna_c_r, ...
-                    zero_lift_aoa_0012, zero_lift_aoa_2412, cessna_geo_t, cessna_geo_r, N);
-end
+cessna_N = linspace(1, 75, 75);
 for i = 1:length(cessna_N)
     
     odd_term(i) = 2 * i - 1;
-    [e_Cessna140(i), c_L_Cessna140(i), c_Di_Cessna140(i)] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, aero_t_Cessna140, aero_r_Cessna140, geo_t_Cessna140, geo_r_Cessna140, i);
+    [e_Cessna140(i), c_L_Cessna140(i), c_Di_Cessna140(i)] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, ...
+                                                            aero_t_Cessna140, aero_r_Cessna140, geo_t_Cessna140, geo_r_Cessna140, i);
    
+end
+
+c_L_Cessna140_actual = c_L_Cessna140(length(c_L_Cessna140));
+c_Di_Cessna140_actual = c_Di_Cessna140(length(c_Di_Cessna140));
+
+found_CL_10 = false;
+found_CL_1 = false;
+found_CL_01 = false;
+
+found_CDi_10 = false;
+found_CDi_1 = false;
+found_CDi_01 = false;
+
+for i = 1:length(cessna_N)
+    
+    c_L_Cessna140_error = abs(100*((c_L_Cessna140(i) - c_L_Cessna140_actual)/c_L_Cessna140_actual));
+    c_Di_Cessna140_error = abs(100*(c_Di_Cessna140(i) - c_Di_Cessna140_actual)/c_Di_Cessna140_actual);
+    
+    % c_L error
+    if ~found_CL_10 && c_L_Cessna140_error < 10
+
+        idx_CL_10 = i;
+        c_L_Cessna140_10 = c_L_Cessna140(i);
+        found_CL_10 = true;
+    end
+
+    if ~found_CL_1 && c_L_Cessna140_error < 1
+        
+        idx_CL_1 = i;
+        c_L_Cessna140_1 = c_L_Cessna140(i);
+        found_CL_1 = true;
+    end
+
+    if ~found_CL_01 && c_L_Cessna140_error < 0.1
+        idx_CL_01 = i;
+        c_L_Cessna140_0_1 = c_L_Cessna140(i);
+        found_CL_01 = true;
+    end
+
+    % c_Di error
+    if ~found_CDi_10 && c_Di_Cessna140_error < 10
+        idx_CDi_10 = i;
+        c_Di_Cessna140_10 = c_Di_Cessna140(i);
+        found_CDi_10 = true;
+    end
+
+    if ~found_CDi_1 && c_Di_Cessna140_error < 1
+        idx_CDi_1 = i;
+        c_Di_Cessna140_1 = c_Di_Cessna140(i);
+        found_CDi_1 = true;
+    end
+
+    if ~found_CDi_01 && c_Di_Cessna140_error < 0.1
+        idx_CDi_01 = i;
+        c_Di_Cessna140_0_1 = c_Di_Cessna140(i);
+        found_CDi_01 = true;
+
+    end
+end
+
+if plotCL_Cessna
+    figure();
+    hold on;
+    plot(odd_term, c_L_Cessna140,"LineWidth", 1.5, "DisplayName", "Sectional Lift Coefficient");
+    xline(idx_CL_10, "--r", "LineWidth", 1.5, "DisplayName", "Required Terms for 10\% Error");
+    xline(idx_CL_1, "--r", "LineWidth", 1.5, "DisplayName", "Required Terms for 1\% Error");
+    xline(idx_CL_01, "--r", "LineWidth", 1.5, "DisplayName", "Required Terms for 0.1\% Error");
+    hold off;
+    grid on;
+    xlabel("Number of Odd Terms");
+    ylabel("Sectional Lift Coefficient");
+    title("Sectional Lift Coefficient versus Number of Odd Terms for Cessna 140");
+    legend();
+end
+
+if plotCDi_Cessna
+    figure();
+    hold on;
+    plot(odd_term, c_Di_Cessna140,"LineWidth", 1.5, "DisplayName", "Induced Drag Coefficient");
+    xline(idx_CDi_10, "--r", "LineWidth", 1.5, "DisplayName", "Required Terms for 10\% Error");
+    xline(idx_CDi_1, "--r", "LineWidth", 1.5, "DisplayName", "Required Terms for 1\% Error");
+    xline(idx_CDi_01, "--r", "LineWidth", 1.5, "DisplayName", "Required Terms for 0.1\% Error");
+    hold off;
+    grid on;
+    xlabel("Number of Odd Terms");
+    ylabel("Induced Drag Coefficient");
+    title("Induced Drag Coefficient versus Number of Odd Terms for Cessna 140");
+    legend();
 end
 
 
@@ -448,44 +518,4 @@ plot(alpha,L_D_ratio)
 xlabel('Angle of Attack (degrees)')
 ylabel('L/D Ratio')
 title('L/D ratio versus angle of attack')
-
-
-c_L_Cessna140_actual = c_L_Cessna140(length(c_L_Cessna140));
-c_Di_Cessna140_actual = c_Di_Cessna140(length(c_Di_Cessna140));
-
-for i = 1:length(cessna_N)
-    c_L_Cessna140_error(i) = 100*((c_L_Cessna140(i) - c_L_Cessna140_actual)/c_L_Cessna140_actual);
-    c_Di_Cessna140_error(i) = 100*(c_Di_Cessna140(i) - c_Di_Cessna140_actual)/c_Di_Cessna140_actual;
-    
-    % c_L error
-    if c_L_Cessna140_error(i) > 10
-        c_L_Cessna140_error_10 = c_L_Cessna140(i+1);
-        c_L_error_10_percent = i+1;
-    elseif c_L_Cessna140_error(i) > 1
-        c_L_Cessna140_error_1 = c_L_Cessna140(i+1);
-        c_L_error_1_percent = i+1;
-    elseif c_L_Cessna140_error(i) > 0.1
-        c_L_Cessna140_error_0_1 = c_L_Cessna140(i+1);
-        c_L_error_0_1_percent = i+1;
-    end
-
-    % c_Di error
-    if c_Di_Cessna140_error(i) > 10
-        c_Di_Cessna140_error_10 = c_Di_Cessna140(i+1);
-        c_Di_error_10_percent = i+1;
-    elseif c_Di_Cessna140_error(i) > 1
-        c_Di_Cessna140_error_1 = c_Di_Cessna140(i+1);
-        c_Di_error_1_percent = i+1;
-    elseif c_Di_Cessna140_error(i) > 0.1
-        c_Di_Cessna140_error_0_1 = c_Di_Cessna140(i+1);
-        c_Di_error_0_1_percent = i+1;
-    end
-end
-
-figure()
-plot(cessna_N,c_L_Cessna140_error)
-hold on
-yline(10)
-yline(1)
-yline(0.1)
 
