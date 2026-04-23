@@ -493,10 +493,12 @@ D = 0.5 * rho_slugft3 * (v_inf^2) * (c_d + c_Di_Cessna140_0_1) * s;
 L_over_Di = L/D; 
 
 %% Deliverable 4 - 5: 
+c=1;
 c_2412=5+(4/12); % chord length (ft)
 c_0012=3+(8.5/12); % chord length (ft)
 N=21; % number of panels
-alpha = linspace(-8, 10, 200);
+alpha = linspace(-10, 10, 200);
+b_Cessna140 = 33+(4/12);
 
 %Using Vortex Pannel method from Part 1: 
 %Airfoil Params
@@ -580,7 +582,7 @@ plot(alpha,c_Di_alpha,'--b', "LineWidth", 1.5)
 plot(alpha,cd,'r', "LineWidth", 1.5)
 xlabel('Angle of Attack (degrees)')
 ylabel('Sectional Drag Coefficient')
-xlim([-8, 10])
+xlim([-10, 10])
 title('Total drag vs Angle of Attack')
 legend('Total Drag Coefficient','Induced Drag Coefficient','Sectional Drag Coefficient')
 grid on
@@ -591,7 +593,7 @@ hold on
 plot(alpha,L_D_ratio, "LineWidth", 2)
 xlabel('Angle of Attack (degrees)')
 ylabel('L/D Ratio')
-xlim([-8, 10])
+xlim([-10, 10])
 grid on
 title('L/D Ratio vs Angle of Attack')
 hold off
