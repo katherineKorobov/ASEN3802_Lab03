@@ -505,7 +505,7 @@ c=1;
 c_2412=5+(4/12); % chord length (ft)
 c_0012=3+(8.5/12); % chord length (ft)
 N=21; % number of panels
-alpha = linspace(-12, 12, 200);
+alpha = linspace(-10, 10, 200);
 b_Cessna140 = 33+(4/12);
 
 %Using Vortex Pannel method from Part 1: 
@@ -534,34 +534,56 @@ zero_lift_aoa_2412 = interp1(cl_2412, alpha, 0, "linear"); % root
 zero_lift_aoa_0012 = interp1(cl_0012, alpha, 0, "linear"); %tip
 
 % Lift slope 
-a0_r_Cessna140 = calculateLiftSlope(alpha, cl_2412) * (180/pi); 
-a0_t_Cessna140 = calculateLiftSlope(alpha, cl_0012) * (180/pi); 
- 
-mat=load("NACA_0012_cd.mat");
-cd_0012=mat.sorted_data;
-mat=load("NACA_2412_cd.mat");
-cd_2412=mat.sorted_data;
-alpha_0012=[-12;-10;-8;-6;-4;-2;-1;1;2;4;6;8;10;12]; %Digitizer gives in terms of C_l, angle of attack values for c_l values
-alpha_2412=[-8;-6;-4;-2;0;2;4;6;8;10;11;12.5]; %Digitizer gives in terms of C_l, angle of attack values for c_l values
-[p_0012,s_0012]=polyfit(alpha_0012,cd_0012(:,2),2); %Digitizer gives different sized arrays, curve fitting to create same size and allow for more data points
-[p_2412,s_2412]=polyfit(alpha_2412,cd_2412(:,2),2); %Digitizer gives different sized arrays, curve fitting to create same size and allow for more data points
+a0_r_Cessna140 = calculateLiftSlope(alpha, cl_2412); 
+a0_t_Cessna140 = calculateLiftSlope(alpha, cl_0012); 
 
-alpha=linspace(-15,15,100); %Maximum angle of attack range for digitizer
+% experimental data
+mat = load("NACA_0012_cd.mat");
+data_0012_cd = mat.sorted_data;
+mat = load("NACA_2412_cd.mat");
+data_2412_cd = mat.sorted_data;
 
-cd_0012=polyval(p_0012,alpha); %Creating same sized arrays based on maximum angles of attack
-cd_2412=polyval(p_2412,alpha); %Creating same sized arrays based on maximum angles of attack
+cl_exp_0012 = data_0012_cd(:,1);
+cd_exp_0012 = data_0012_cd(:,2);
+cl_exp_2412 = data_2412_cd(:,1);
+cd_exp_2412 = data_2412_cd(:,2);
 
-cd=(cd_0012+cd_2412)./2; %Averaging profile Drags
+cL_alpha = zeros(size(alpha));
+c_Di_alpha = zeros(size(alpha));
+cd = zeros(size(alpha));
+C_D = zeros(size(alpha));
+L_D_ratio = zeros(size(alpha));
+cl_r = zeros(size(alpha));
+cl_t = zeros(size(alpha));
+cd_r = zeros(size(alpha));
+cd_t = zeros(size(alpha));
 
-for i=1:length(alpha)
-[~, c_L_alpha(i), c_Di_alpha(i)] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_t_Cessna140, c_r_Cessna140, ... 
-                                    aero_t_Cessna140, aero_r_Cessna140, alpha(i), alpha(i)+1, N); %calculating induced drag and lift from PLLT
+for i = 1:length(alpha)
+    % Geometric angles
+    geo_r = alpha(i) + 1;   
+    geo_t = alpha(i);       
+
+    % PLLT gives finite-wing CL and induced drag
+    [e, cL_alpha(i), c_Di_alpha(i)] = PLLT(b_Cessna140, a0_t_Cessna140, a0_r_Cessna140, c_0012, c_2412, zero_lift_aoa_0012, zero_lift_aoa_2412, geo_t, geo_r, N);
+
+    % Sectional lift coefficients
+    cl_t(i)  = interp1(alpha, cl_0012, geo_t, "linear", "extrap");
+    cl_r(i) = interp1(alpha, cl_2412, geo_r, "linear", "extrap");
+
+    % Sectional profile drag
+    cd_t(i)  = interp1(cl_exp_0012, cd_exp_0012, cl_t(i), "linear", "extrap");
+    cd_r(i) = interp1(cl_exp_2412, cd_exp_2412, cl_r(i), "linear", "extrap");
+
+    % Average cd of root and tip
+    cd(i) = 0.5 * (cd_r(i) + cd_t(i));
+
+    % Total drag 
+    C_D(i) = cd(i) + c_Di_alpha(i);
+    % L/D 
+    L_D_ratio(i) = cL_alpha(i) / C_D(i);
 end
 
-c_Di_alpha = c_Di_alpha(1:100);
-C_D = Total_Drag(c_Di_alpha,cd); %Calculating total drag
-L_D_ratio=c_L_alpha ./ C_D; %Calculating lift to drag ratio
-
+%Plotting 
 figure
 hold on 
 plot(alpha,C_D, 'm',"LineWidth", 1.5)
@@ -569,7 +591,7 @@ plot(alpha,c_Di_alpha,'--b', "LineWidth", 1.5)
 plot(alpha,cd,'r', "LineWidth", 1.5)
 xlabel('Angle of Attack (degrees)')
 ylabel('Sectional Drag Coefficient')
-xlim([-15, 15])
+xlim([-10, 10])
 title('Total drag vs Angle of Attack')
 legend('Total Drag Coefficient','Induced Drag Coefficient','Sectional Drag Coefficient')
 grid on
@@ -580,8 +602,9 @@ hold on
 plot(alpha,L_D_ratio, "LineWidth", 2)
 xlabel('Angle of Attack (degrees)')
 ylabel('L/D Ratio')
-xlim([-15, 15])
+xlim([-10, 10])
 grid on
 title('L/D Ratio vs Angle of Attack')
 hold off
+
 
