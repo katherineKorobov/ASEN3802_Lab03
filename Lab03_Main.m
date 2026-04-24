@@ -7,6 +7,15 @@ clc; clear; close all;
 %   panel method for symmetric airfoils
 %   Task 4: Analysis of the accuracy of thin airfoil theory and vortex
 %   panel method for cambered airfoils
+% Part 2: PLLT Implementation
+%   Task 1: Implements Prandtl Lifting Line Theory 
+% Part 3: Analyzing a Cessna 140
+%   Task 1: Analyzing accuracy of CL and CDi for varying series expansion
+%   terms
+%   Task 2: Plots of Task 1
+%   Task 3: Finding the Lift, Drag, and Aerodynamic Efficiency (L/D)
+%   Task 4: Analyzing Total Drag
+%   Task 5: Analyzing the L/D ratio
 % Authors: {Corey Hannum, John Heflin, Katherine Korobov, and Kiana Watson}
 % Date: {04/14/2026}
 
